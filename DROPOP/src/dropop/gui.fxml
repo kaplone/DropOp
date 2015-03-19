@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+
+<Pane fx:id="rootPane" minHeight="100.0" onDragOver="#over1" prefHeight="722.0" prefWidth="1275.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dropop.gui_controller">
+<children><Button fx:id="zero" layoutX="20.0" layoutY="300.0" mnemonicParsing="false" opacity="0.75" text="0" visible="false" /><BorderPane prefHeight="722.0" prefWidth="1275.0">
+<right><VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+<children><Button fx:id="un" mnemonicParsing="false" onDragDetected="#detect" onDragDone="#done" text="1" /><Button fx:id="deux" mnemonicParsing="false" onDragDetected="#detect" onDragDone="#done" text="2" /><Button fx:id="trois" mnemonicParsing="false" onDragDetected="#detect" onDragDone="#done" text="3" />
+</children></VBox>
+</right>
+<center><Pane fx:id="grille" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+<children><Rectangle fx:id="case_hl" arcHeight="5.0" arcWidth="5.0" fill="#97bbda" height="25.0" layoutX="301.0" layoutY="141.0" stroke="#c6c6c6" strokeType="INSIDE" width="25.0" />
+</children></Pane>
+</center></BorderPane>
+</children>
+</Pane>
