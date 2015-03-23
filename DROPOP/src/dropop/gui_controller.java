@@ -40,6 +40,8 @@ public class gui_controller implements Initializable {
 	@FXML
 	private Button trois;
 	@FXML
+	private Button zero_;
+	@FXML
 	private Button zero;
 	@FXML
 	private Rectangle case_hl;
@@ -47,10 +49,21 @@ public class gui_controller implements Initializable {
 	private Pane grille;
 	@FXML
 	private Pane rootPane;
+	@FXML
+	private GridPane clavier;
+	@FXML
+	private Line div_h;
+	@FXML
+	private Line div_v;
+	
+	private Object source;
 	
 	private Button copie;
 	
+	private Pane cursorPane;
+	
 	ArrayList<Button> liste_boutons;
+	ArrayList<Pane> liste_panes;
 	
 	Line ligne_v;
 	Line ligne_h;
@@ -60,69 +73,122 @@ public class gui_controller implements Initializable {
 
 	@FXML
 	public void detect(Event e0){
-		System.out.println("detect");
         Dragboard db = un.startDragAndDrop(TransferMode.MOVE);
+        
+        source = e0.getSource().toString();
         
         /* Put a string on a dragboard */
         ClipboardContent content = new ClipboardContent();
         content.putString(un.getText());
         db.setContent(content);
         
-        zero.setText(((Button)e0.getSource()).getText());
+        zero_.setText(((Button)e0.getSource()).getText());
         
-        zero.relocate(50.0, 100.0);
-	}
-	@FXML
-	public void entre(){
-		System.out.println("entre");
-		grille.setOpacity(0.5);
-		
-		
+        zero_.relocate(50.0, 100.0);
 	}
 	@FXML
 	public void done(){
-		System.out.println("done");
-		zero.setVisible(false);
-		copie = new Button();
-		copie.setText(zero.getText());
-		copie.setLayoutX(case_hl.getLayoutX());
-		copie.setLayoutY(case_hl.getLayoutY());
-		rootPane.getChildren().add(copie);
-		copie.setVisible(true);
 		
-		liste_boutons.add(copie);
-
-		
+		if (source.toString().startsWith("Button")){
+			zero_.setVisible(false);
+			copie = new Button();
+			copie.setText(zero_.getText());
+			copie.setMinWidth(27.0);
+			copie.setLayoutX(case_hl.getLayoutX());
+			copie.setLayoutY(case_hl.getLayoutY());
+			rootPane.getChildren().add(copie);
+			copie.setVisible(true);
+			
+			liste_boutons.add(copie);
+		}
+		else if (source.toString().startsWith("Pane")){
+			cursorPane.toFront();
+	        liste_panes.add(cursorPane);
+			
+		}
 	}
 	@FXML
 	public void over1(DragEvent e1){
-		//System.out.println(e1.getSceneX() + ", " + e1.getSceneY());
-		zero.relocate(e1.getSceneX(), e1.getSceneY());
-		case_hl.relocate(Math.round(e1.getSceneX()) /25 * 25, Math.round(e1.getSceneY()) /25 * 25);
-		zero.setVisible(true);
+		zero_.relocate(e1.getSceneX(), e1.getSceneY());
+		zero_.toFront();
 		
-		//zero.relocate(50.0, 100.0);
+		if (source.toString().startsWith("Button")){
+		    case_hl.relocate(Math.round(e1.getSceneX()) /25 * 25, Math.round(e1.getSceneY()) /25 * 25);
+		    zero_.setVisible(true);
+		}
+		else if (source.toString().startsWith("Pane")){
+			cursorPane.relocate(Math.round(e1.getSceneX()) /25 * 25, Math.round(e1.getSceneY()) /25 * 25);
+			
+		    //zero_.setVisible(true);
+		}
+		
+		//zero_.relocate(50.0, 100.0);
 	}
+	
+
 	@FXML
-	public void dropped(){
-		System.out.println("dropped");
-		
-		
+	public void detect_op(Event e2){
+        Dragboard db = un.startDragAndDrop(TransferMode.MOVE);
+        
+        source = e2.getSource().toString();
+        
+        /* Put a string on a dragboard */
+        ClipboardContent content = new ClipboardContent();
+        content.putString(e2.getSource().toString());
+        db.setContent(content);
+        
+        cursorPane = new Pane();
+        cursorPane.getProperties().putAll(((Pane)e2.getSource()).getProperties());
+        cursorPane.setLayoutX(100);
+        cursorPane.setLayoutY(100);
+        
+        Circle circle = new Circle();
+        circle.setCenterX(100.0f);
+        circle.setCenterY(100.0f);
+        circle.setRadius(50.0f);
+        
+        Line lh = new Line();
+        Line lv = new Line();
+        lh.setStartX(div_h.getStartX());
+        lh.setStartY(div_h.getStartY());
+        lh.setEndX(div_h.getEndX());
+        lh.setEndY(div_h.getEndY());
+        lv.setStartX(div_v.getStartX());
+        lv.setStartY(div_v.getStartY() - 50);
+        lv.setEndX(div_v.getEndX());
+        lv.setEndY(div_v.getEndY() - 50);
+        
+        
+        
+        cursorPane.getChildren().add(lh);
+        cursorPane.getChildren().add(lv);
+        
+        rootPane.getChildren().add(cursorPane);
+
 	}
 	
 	
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		
+		liste_panes = new ArrayList<>();
 	
 		System.out.println("init");
-		zero.setVisible(true);
-		zero.relocate(-30.0, -30.0);
+		zero_.setVisible(true);
+		zero_.relocate(-30.0, -30.0);
 		case_hl.relocate(-30.0, -30.0);
 		
 		liste_boutons = new ArrayList<>();
 		lignes_h = new ArrayList<>();
 		lignes_v = new ArrayList<>();
+		
+		clavier.getChildren().remove(zero);
+//		GridPane.setRowIndex(zero, 3);
+//	    GridPane.setColumnIndex(zero, 0);
+//		GridPane.setColumnSpan(zero, 2);
+		zero.setMinWidth(61.0);
+		clavier.add(zero, 0, 3 , 2, 1);
 		
 		
 		
