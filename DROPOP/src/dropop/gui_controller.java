@@ -7,7 +7,11 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import javax.imageio.ImageIO;
+
 import javafx.scene.Node;
+import javafx.scene.SnapshotParameters;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
@@ -20,6 +24,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -56,7 +61,7 @@ public class gui_controller implements Initializable {
 	@FXML
 	private Line div_v;
 	
-	private Object source;
+	private String source;
 	
 	private Button copie;
 	
@@ -105,8 +110,21 @@ public class gui_controller implements Initializable {
 			cursorPane.toFront();
 	        liste_panes.add(cursorPane);
 			
+	        WritableImage image = cursorPane.snapshot(new SnapshotParameters(), null);
+
+	        // TODO: probably use a file chooser here
+	        File file = new File("/home/kaplone/Desktop/chart.png");
+
+	        try {
+	            ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
+	        } catch (IOException e) {
+	            // TODO: handle exception here
+	        }
 		}
 	}
+	
+	
+	
 	@FXML
 	public void over1(DragEvent e1){
 		zero_.relocate(e1.getSceneX(), e1.getSceneY());
