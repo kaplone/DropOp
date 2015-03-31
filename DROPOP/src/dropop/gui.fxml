@@ -59,7 +59,27 @@
 </font>
 </Label>
 </children>
-</GridPane>
+</GridPane><VBox prefHeight="200.0" prefWidth="100.0">
+<children><RadioButton fx:id="radio_element" mnemonicParsing="false" onAction="#on_radio_select_action" selected="true" text="élément">
+<VBox.margin>
+<Insets top="10.0" />
+</VBox.margin>
+<toggleGroup>
+<ToggleGroup fx:id="selection" />
+</toggleGroup></RadioButton><RadioButton fx:id="radio_ligne" mnemonicParsing="false" onAction="#on_radio_select_action" text="ligne" toggleGroup="$selection">
+<VBox.margin>
+<Insets top="10.0" />
+</VBox.margin></RadioButton><RadioButton fx:id="radio_bloc" mnemonicParsing="false" onAction="#on_radio_select_action" text="bloc" toggleGroup="$selection">
+<VBox.margin>
+<Insets top="10.0" />
+</VBox.margin></RadioButton><RadioButton fx:id="radio_operation" mnemonicParsing="false" onAction="#on_radio_select_action" text="operation" toggleGroup="$selection">
+<VBox.margin>
+<Insets top="10.0" />
+</VBox.margin></RadioButton>
+</children>
+<VBox.margin>
+<Insets left="5.0" />
+</VBox.margin></VBox>
 </children></VBox>
 </right>
 <center><Pane fx:id="grille" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
