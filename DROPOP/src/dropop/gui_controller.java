@@ -92,6 +92,7 @@ public class gui_controller implements Initializable {
 	@FXML
 	public void on_radio_select_action(Event e){
 		
+		System.out.println(e.getSource().toString().split("'")[1]);
 		selectionMode.set(e.getSource().toString().split("'")[1]);
 		
 	}
@@ -113,6 +114,8 @@ public class gui_controller implements Initializable {
 	}
 	@FXML
 	public void detect2(Event e0){
+		
+			
         Dragboard db = un.startDragAndDrop(TransferMode.MOVE);
         
         source = e0.getSource().toString();
@@ -151,14 +154,14 @@ public class gui_controller implements Initializable {
 			
 			//liste_boutons.add(copie);
 			
-			if (rows.containsKey(Utils.arrondir(copie.getLayoutX()))){
+			if (rows.containsKey(Utils.arrondir(copie.getLayoutY()))){
 				
-				rows.get(Utils.arrondir(copie.getLayoutX())).getContenuLigne().add(ch);
+				rows.get(Utils.arrondir(copie.getLayoutY())).getContenuLigne().add(ch);
 			}
 			else {
 				ligne = new Ligne();
 				ligne.getContenuLigne().add(ch);
-				rows.put(Utils.arrondir(copie.getLayoutX()), ligne);
+				rows.put(Utils.arrondir(copie.getLayoutY()), ligne);
 			}
 		}
 		else if (source.toString().startsWith("Pane")){
@@ -167,8 +170,39 @@ public class gui_controller implements Initializable {
 			
 		}
 	}
+	
+	private void link(Positionnable c, Positionnable p){
+		c.topY.bind(p.topY);
+	}
+	
+	
 	@FXML
 	public void over1(DragEvent e1){
+		
+		if(selectionMode.get().equals("ligne")){
+			
+			
+			// à placer dans detect. afin de pouvoir se déplacer sur une autre ligne sans tout casser
+			
+			
+			System.out.println("ligne ok");
+			ObservableList<Positionnable> currentLine = rows.get(Utils.arrondir(e1.getSceneY())).getContenuLigne();
+
+			Positionnable current = null;
+			for (Positionnable p : currentLine){
+				System.out.println(e1.getSceneX()+ " > " + p.getTopY());
+				System.out.println(e1.getSceneX()+ " < " + (p.getTopY() + 25));
+				
+				if (e1.getSceneX() > p.getTopY() && e1.getSceneX() < p.getTopY() + 25){
+					current = p;
+					break;
+				}
+			}
+			
+			//rows.get(Utils.arrondir(e1.getSceneY())).getContenuLigne().forEach(p -> link(current,p));
+		}
+		
+		
 		zero_.relocate(e1.getSceneX(), e1.getSceneY());
 		zero_.toFront();
 		
