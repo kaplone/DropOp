@@ -1,61 +1,35 @@
 package models;
 
-import utils.OperationElementType;
+import utils.ElementType;
 
-public class Element {
+public class Element extends Commun {
 	
 	/**
 	 * 
+	 * 
 	 */
+	
     
-	private OperationElementType oet;
-	
-	private Operation operationParente;
-	
-	private int XPosition;
-	
-	private int Yposition;
+	private ElementType oet;
 
-	public Element(OperationElementType oet, Operation operationParente,
+	public Element(ElementType oet, Commun elementParent,
 			int xPosition, int yposition) {
-		super();
+		super(xPosition, yposition, elementParent);
 		this.oet = oet;
-		this.operationParente = operationParente;
-		XPosition = xPosition;
-		Yposition = yposition;
+		
 	}
 
-	public OperationElementType getOet() {
+	public ElementType getOet() {
 		return oet;
 	}
 
-	public void setOet(OperationElementType oet) {
+	public void setOet(ElementType oet) {
 		this.oet = oet;
 	}
 
-	public Operation getOperationParente() {
-		return operationParente;
-	}
+	
 
-	public void setOperationParente(Operation operationParente) {
-		this.operationParente = operationParente;
-	}
-
-	public int getXPosition() {
-		return XPosition;
-	}
-
-	public void setXPosition(int xPosition) {
-		XPosition = xPosition;
-	}
-
-	public int getYposition() {
-		return Yposition;
-	}
-
-	public void setYposition(int yposition) {
-		Yposition = yposition;
-	}
+	
 	
 	
 }

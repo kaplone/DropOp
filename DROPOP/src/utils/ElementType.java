@@ -1,8 +1,9 @@
 package utils;
 
-public enum OperationElementType {
+public enum ElementType {
 	CHIFFRE,
 	RETENUE,
 	MOTIF,
+	VIRGULE,
 	SIGNE;
 }

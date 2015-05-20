@@ -1,6 +1,6 @@
 package models;
 
-import utils.OperationElementType;
+import utils.ElementType;
 
 public class Trait extends Element {
 	
@@ -8,14 +8,12 @@ public class Trait extends Element {
 	 * 
 	 */
 	
-	private int valeur;
+	private int longueur;
 
-	public Trait(OperationElementType oet, Operation operationParente, int xPosition, int yposition) {
-		super(oet, operationParente, xPosition, yposition);
+	public Trait(ElementType oet, Commun parent, int xPosition, int yPosition) {
+		super(oet, parent, xPosition, yPosition);
 	
-		this.valeur = 3;
+		this.longueur = 3;
 	}
-
-	
 
 }

@@ -1,6 +1,6 @@
 package models;
 
-import utils.OperationElementType;
+import utils.ElementType;
 
 public class TraitsEuclide extends Element {
 	
@@ -8,31 +8,31 @@ public class TraitsEuclide extends Element {
 	 * 
 	 */
 	
-	private int valeurVerticale;
-	private int valeurHorizontale;
+	private int longueurVerticale;
+	private int longueurHorizontale;
 
-	public TraitsEuclide(OperationElementType oet, Operation operationParente, int xPosition, int yposition) {
-		super(oet, operationParente, xPosition, yposition);
+	public TraitsEuclide(ElementType oet, Commun parent, int xPosition, int yPosition) {
+		super(oet, parent, xPosition, yPosition);
 		
-		this.valeurVerticale = 4;
-		this.valeurHorizontale = 2;
+		this.longueurVerticale = 4;
+		this.longueurHorizontale = 2;
 
 	}
 	
 	public int getValeurVerticale() {
-		return valeurVerticale;
+		return longueurVerticale;
 	}
 
 	public void setValeurVerticale(int valeurVerticale) {
-		this.valeurVerticale = valeurVerticale;
+		this.longueurVerticale = valeurVerticale;
 	}
 
 	public int getValeurHorizontale() {
-		return valeurHorizontale;
+		return longueurHorizontale;
 	}
 
 	public void setValeurHorizontale(int valeurHorizontale) {
-		this.valeurHorizontale = valeurHorizontale;
+		this.longueurHorizontale = valeurHorizontale;
 	}
 
 }
