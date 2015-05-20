@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 
 import javax.imageio.ImageIO;
@@ -61,13 +62,25 @@ public class gui_controller implements Initializable {
 	@FXML
 	private Line div_v;
 	
+	@FXML
+	private RadioButton radio_element,
+	                    radio_ligne,
+	                    radio_bloc,
+	                    radio_operation;
+	
 	private String source;
 	
 	private Button copie;
 	
 	private Pane cursorPane;
 	
-	ArrayList<Button> liste_boutons;
+	private StringProperty selectionMode = new SimpleStringProperty("element");
+	
+	private Ligne ligne;
+	
+	private ObservableMap<Integer, Ligne> rows = FXCollections.observableMap(new HashMap<Integer, Ligne>());
+	
+	//ArrayList<Button> liste_boutons;
 	ArrayList<Pane> liste_panes;
 	
 	Line ligne_v;
@@ -75,6 +88,14 @@ public class gui_controller implements Initializable {
 	
 	ArrayList<Line> lignes_v;
 	ArrayList<Line> lignes_h;
+	
+	@FXML
+	public void on_radio_select_action(Event e){
+		
+		System.out.println(e.getSource().toString().split("'")[1]);
+		selectionMode.set(e.getSource().toString().split("'")[1]);
+		
+	}
 
 	@FXML
 	public void detect(Event e0){
@@ -92,19 +113,56 @@ public class gui_controller implements Initializable {
         zero_.relocate(50.0, 100.0);
 	}
 	@FXML
+	public void detect2(Event e0){
+		
+			
+        Dragboard db = un.startDragAndDrop(TransferMode.MOVE);
+        
+        source = e0.getSource().toString();
+        ((Button) e0.getSource()).setVisible(false);
+        /* Put a string on a dragboard */
+        ClipboardContent content = new ClipboardContent();
+        content.putString(un.getText());
+        db.setContent(content);
+        
+        zero_.setText(((Button)e0.getSource()).getText());
+        
+        zero_.relocate(50.0, 100.0);
+	}
+	@FXML
 	public void done(){
 		
 		if (source.toString().startsWith("Button")){
 			zero_.setVisible(false);
 			copie = new Button();
+			copie.setOnDragDetected(new EventHandler<Event>() {
+
+				@Override
+				public void handle(Event event) {
+					detect2( event);
+					
+				}
+			});
 			copie.setText(zero_.getText());
 			copie.setMinWidth(27.0);
+			
+			Chiffre ch = new Chiffre(case_hl, copie);
 			copie.setLayoutX(case_hl.getLayoutX());
 			copie.setLayoutY(case_hl.getLayoutY());
 			rootPane.getChildren().add(copie);
 			copie.setVisible(true);
 			
-			liste_boutons.add(copie);
+			//liste_boutons.add(copie);
+			
+			if (rows.containsKey(Utils.arrondir(copie.getLayoutY()))){
+				
+				rows.get(Utils.arrondir(copie.getLayoutY())).getContenuLigne().add(ch);
+			}
+			else {
+				ligne = new Ligne();
+				ligne.getContenuLigne().add(ch);
+				rows.put(Utils.arrondir(copie.getLayoutY()), ligne);
+			}
 		}
 		else if (source.toString().startsWith("Pane")){
 			cursorPane.toFront();
@@ -127,17 +185,42 @@ public class gui_controller implements Initializable {
 	
 	@FXML
 	public void over1(DragEvent e1){
+		
+		if(selectionMode.get().equals("ligne")){
+			
+			
+			// à placer dans detect. afin de pouvoir se déplacer sur une autre ligne sans tout casser
+			
+			
+			System.out.println("ligne ok");
+			ObservableList<Positionnable> currentLine = rows.get(Utils.arrondir(e1.getSceneY())).getContenuLigne();
+
+			Positionnable current = null;
+			for (Positionnable p : currentLine){
+				System.out.println(e1.getSceneX()+ " > " + p.getTopY());
+				System.out.println(e1.getSceneX()+ " < " + (p.getTopY() + 25));
+				
+				if (e1.getSceneX() > p.getTopY() && e1.getSceneX() < p.getTopY() + 25){
+					current = p;
+					break;
+				}
+			}
+			
+			//rows.get(Utils.arrondir(e1.getSceneY())).getContenuLigne().forEach(p -> link(current,p));
+		}
+		
+		
 		zero_.relocate(e1.getSceneX(), e1.getSceneY());
 		zero_.toFront();
 		
 		if (source.toString().startsWith("Button")){
-		    case_hl.relocate(Math.round(e1.getSceneX()) /25 * 25, Math.round(e1.getSceneY()) /25 * 25);
+		    case_hl.relocate(Utils.arrondir(e1.getSceneX()), Utils.arrondir(e1.getSceneY()));
 		    zero_.setVisible(true);
 		}
 		else if (source.toString().startsWith("Pane")){
-			cursorPane.relocate(Math.round(e1.getSceneX()) /25 * 25, Math.round(e1.getSceneY()) /25 * 25);
+			cursorPane.relocate(Utils.arrondir(e1.getSceneX()), Utils.arrondir(e1.getSceneY()));
 			
-		    //zero_.setVisible(true);
+		    zero_.setVisible(false);
 		}
 		
 		//zero_.relocate(50.0, 100.0);
@@ -197,14 +280,11 @@ public class gui_controller implements Initializable {
 		zero_.relocate(-30.0, -30.0);
 		case_hl.relocate(-30.0, -30.0);
 		
-		liste_boutons = new ArrayList<>();
+		//liste_boutons = new ArrayList<>();
 		lignes_h = new ArrayList<>();
 		lignes_v = new ArrayList<>();
 		
 		clavier.getChildren().remove(zero);
-//		GridPane.setRowIndex(zero, 3);
-//	    GridPane.setColumnIndex(zero, 0);
-//		GridPane.setColumnSpan(zero, 2);
 		zero.setMinWidth(61.0);
 		clavier.add(zero, 0, 3 , 2, 1);
 		
