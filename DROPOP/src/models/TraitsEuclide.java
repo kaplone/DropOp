@@ -2,7 +2,7 @@ package models;
 
 import utils.ElementType;
 
-public class TraitsEuclide extends Element {
+public class TraitsEuclide extends Commun {
 	
 	/**
 	 * 
@@ -12,7 +12,7 @@ public class TraitsEuclide extends Element {
 	private int longueurHorizontale;
 
 	public TraitsEuclide(ElementType oet, Commun parent, int xPosition, int yPosition) {
-		super(oet, parent, xPosition, yPosition);
+		super(xPosition, yPosition);
 		
 		this.longueurVerticale = 4;
 		this.longueurHorizontale = 2;

@@ -2,7 +2,7 @@ package models;
 
 import utils.ElementType;
 
-public class Trait extends Element {
+public class Trait extends Commun {
 	
 	/**
 	 * 
@@ -11,7 +11,7 @@ public class Trait extends Element {
 	private int longueur;
 
 	public Trait(ElementType oet, Commun parent, int xPosition, int yPosition) {
-		super(oet, parent, xPosition, yPosition);
+		super(xPosition, yPosition);
 	
 		this.longueur = 3;
 	}
