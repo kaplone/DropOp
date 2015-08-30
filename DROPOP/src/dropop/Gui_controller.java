@@ -115,6 +115,8 @@ public class Gui_controller implements Initializable {
 	
 	private boolean ligne_grabbed = false;
 	
+	private boolean deleted = false;
+	
 	private ObservableList<Commun> currentLine;
 
 	ArrayList<Pane> liste_panes;
@@ -285,25 +287,44 @@ public class Gui_controller implements Initializable {
 			System.out.println("liste des rows : " + rows.entrySet());
 			System.out.println(case_hl);
 			System.out.println(case_hl.getLayoutY());
-			System.out.println(Utils.arrondirVersPosition(case_hl.getLayoutY()));
+			System.out.println("Utils.arrondirVersPosition(case_hl.getLayoutY()) : " + Utils.arrondirVersPosition(case_hl.getLayoutY()));
+			System.out.println("Utils.arrondirVersPosition(case_hl.getLayoutX()) : " + Utils.arrondirVersPosition(case_hl.getLayoutX()));
 			
 			System.out.println("mapDesBoutons : " + mapBoutons.entrySet());
 			
-			if (rows.containsKey((Utils.arrondirVersPosition(case_hl.getLayoutY())))){
+			if (Utils.arrondirVersPosition(case_hl.getLayoutY()) < 0
+			 || Utils.arrondirVersPosition(case_hl.getLayoutY()) > 26
+			 || Utils.arrondirVersPosition(case_hl.getLayoutX()) < 0
+			 || Utils.arrondirVersPosition(case_hl.getLayoutX()) > 37){
+				
+				System.out.println("___ cas delete ___");
+				if (source != null){
+					ligne_source.delContenu(mapBoutons.get(source));
+					mapBoutons.remove(source);
+				}
+				case_hl.setVisible(false);
+				affPositionHorizontale.setVisible(false);
+				affPositionVerticale.setVisible(false);
+				zero_.setVisible(false);
+				deleted = true;
+			}
+			else if (rows.containsKey((Utils.arrondirVersPosition(case_hl.getLayoutY())))){
 				System.out.println("ligne déjà présente");
 				ligne_destination = rows.get(Utils.arrondirVersPosition(case_hl.getLayoutY()));
+				deleted = false;
 			}
 			else{
 				System.out.println("ligne à créer");
 				ligne_destination = new Ligne(null, bloc, Utils.arrondirVersPosition(case_hl.getLayoutY()));
 				rows.put(Utils.arrondirVersPosition(case_hl.getLayoutY()), ligne_destination);
+				deleted = false;
 			}
 
 			System.out.println("ligne_destination : " + ligne_destination);
 			System.out.println("ligne_source : " + ligne_source);
 			
 			// deplacement d'une case existante
-			if (ligne_source != null){
+			if (! deleted && ligne_source != null){
 
 				System.out.println("depuis la grille");
 
@@ -367,7 +388,7 @@ public class Gui_controller implements Initializable {
 			// deplacement d'une case depuis la pavé
 			
 			
-			else {
+			else if (! deleted){
 				
 				System.out.println("depuis le pavé");
 				
@@ -474,6 +495,7 @@ public class Gui_controller implements Initializable {
 		if (source.toString().startsWith("Button")){
 			
 		    case_hl.relocate(Utils.arrondir(e1.getSceneX()) + 25, Utils.arrondir(e1.getSceneY()) + 25);
+		    case_hl.setVisible(true);
 		    
 		    affPositionVerticale.textProperty().set((Utils.arrondirVersPosition(e1.getSceneY())) + "");
 		    affPositionVerticale.relocate(Utils.arrondir(e1.getSceneX())  + 30, Utils.arrondir(e1.getSceneY()) + 5);
