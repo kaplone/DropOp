@@ -1,4 +1,4 @@
-package models;
+package placard;
 
 import java.util.stream.IntStream;
 

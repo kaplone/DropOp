@@ -1,4 +1,4 @@
-package models;
+package models.operations;
 
 import utils.OperationType;
 

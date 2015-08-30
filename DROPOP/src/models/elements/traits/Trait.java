@@ -1,5 +1,6 @@
-package models;
+package models.elements.traits;
 
+import models.Commun;
 import utils.ElementType;
 
 public class Trait extends Commun {
@@ -10,8 +11,8 @@ public class Trait extends Commun {
 	
 	private int longueur;
 
-	public Trait(ElementType oet, Commun parent, int xPosition, int yPosition) {
-		super(xPosition, yPosition);
+	public Trait() {
+		super();
 	
 		this.longueur = 3;
 	}

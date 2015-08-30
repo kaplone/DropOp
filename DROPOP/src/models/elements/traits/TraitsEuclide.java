@@ -1,5 +1,6 @@
-package models;
+package models.elements.traits;
 
+import models.Commun;
 import utils.ElementType;
 
 public class TraitsEuclide extends Commun {
@@ -11,8 +12,8 @@ public class TraitsEuclide extends Commun {
 	private int longueurVerticale;
 	private int longueurHorizontale;
 
-	public TraitsEuclide(ElementType oet, Commun parent, int xPosition, int yPosition) {
-		super(xPosition, yPosition);
+	public TraitsEuclide() {
+		super();
 		
 		this.longueurVerticale = 4;
 		this.longueurHorizontale = 2;

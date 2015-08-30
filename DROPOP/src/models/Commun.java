@@ -1,73 +1,37 @@
 package models;
 
-import utils.ElementType;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableSet;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.control.Control;
 import javafx.scene.layout.Pane;
 
-public class Commun {
-	
-    private IntegerProperty xPosition;
-	
-	private IntegerProperty yPosition;
-	
-	private ElementType oet;
-	
+public class Commun extends Control{
+
 	private ObservableList<Commun> contenu;
 	
-	private ObjectProperty<Commun> parent;
+	private Commun parent;
 	
 	private Node node;
 	
-	public Commun(int x, int y) {
-		this.xPosition = new SimpleIntegerProperty(x);
-		this.yPosition = new SimpleIntegerProperty(y);
-		this.node = null;
-		this.oet = null;
-		this.parent = new SimpleObjectProperty<>();
+	public Commun(Node node, Commun parent) {
+		
+		this.node = node;
+		this.parent = parent;
 		this.contenu  = FXCollections.observableArrayList(); 
 	}
 	
-	public Commun() {
-		this(0, 0);
-	}
-
-	public int getXPosition() {
-		return this.xPosition.get();
-	}
-
-	public void setXPosition(int xPosition) {
-		this.xPosition.set(xPosition);
+	public Commun (){
+		this(null, null);
 	}
 	
-	public IntegerProperty XPositionProperty(){
-		return this.xPosition;
-	}	
-
-	public int getYPosition() {
-		return this.yPosition.get();
-	}
-
-	public void setYPosition(int yposition) {
-		this.yPosition.set(yposition);
-	}
-	
-	public IntegerProperty YPositionProperty(){
-		return this.yPosition;
-	}
-	
-	public Commun getParent(){
-		return this.parent.get();
+	public Commun getObjectParent(){
+		return this.parent;
 	}
 	
 	public void setParent(Commun parent){
-		this.parent.set(parent);
+		this.parent = parent;
 	}
 	
 	public ObservableList<Commun> getContenu() {
@@ -77,13 +41,13 @@ public class Commun {
 	public void setContenu(ObservableList<Commun> contenu) {
 		this.contenu = contenu;
 	}
-
-	public ElementType getOet() {
-		return oet;
+	
+	public void addContenu(Commun commun){
+		this.contenu.add(commun);
 	}
 	
-	public void setParent(ObjectProperty<Commun> parent) {
-		this.parent = parent;
+	public void delContenu(Commun commun){
+		this.contenu.remove(commun);
 	}
 
 	public void setNode(Node node) {
@@ -94,10 +58,6 @@ public class Commun {
 		return node;
 	}
 
-	public void setOet(ElementType oet) {
-		this.oet = oet;
-	}
-	
 	public void draw(){
 		for (Commun nouveau : this.contenu){
 			nouveau.draw();
@@ -114,24 +74,14 @@ public class Commun {
 		Commun copie = new Commun();
 		
 		copie.setContenu(this.contenu);
-		System.out.println(contenu + " -> contenu ");
+		//System.out.println(contenu + " -> contenu ");
 		
 		copie.setParent(this.parent);
-		System.out.println(parent + " -> parent ");
-		
-		copie.setOet(this.oet);
-		System.out.println(oet + " -> oet");
-		
+		//System.out.println(parent + " -> parent ");
+
 		copie.setNode(this.node);
-		System.out.println(node + " -> node ");
-		
-		copie.setXPosition(this.getXPosition());
-		System.out.println(xPosition + " -> xpos ");
-		
-		copie.setYPosition(this.getYPosition());
-		System.out.println(yPosition + " -> ypos ");
+		//System.out.println(node + " -> node ");
 				
 		return copie;
 	}
-
 }
