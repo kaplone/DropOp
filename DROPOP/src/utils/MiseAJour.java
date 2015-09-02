@@ -1,7 +1,10 @@
 package utils;
 
+import java.util.Map;
+
 import utils.Utils;
 import dropop.Gui_controller;
+import javafx.collections.ObservableMap;
 import javafx.scene.control.Button;
 import javafx.scene.shape.Rectangle;
 import models.elements.Chiffre;
@@ -25,7 +28,6 @@ public class MiseAJour {
     public void miseAJourListe(){
 		
 	}
-	
-	
+
 
 }

@@ -1,5 +1,6 @@
 package dropop;
 
+import java.beans.Visibility;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -119,23 +120,27 @@ public class Gui_controller implements Initializable {
 	
 	private ObservableList<Commun> currentLine;
 
-	ArrayList<Pane> liste_panes;
+	private ArrayList<Pane> liste_panes;
 	
-	Line ligne_v;
-	Line ligne_h;
+	private Line ligne_v;
+	private Line ligne_h;
 	
-	ArrayList<Line> lignes_v;
-	ArrayList<Line> lignes_h;
+	private ArrayList<Line> lignes_v;
+	private ArrayList<Line> lignes_h;
 	private int colonne_source;
 	
-	Label affPositionVerticale = new Label();
-	Label affPositionHorizontale = new Label();
-
+	private Label affPositionVerticale = new Label();
+	private Label affPositionHorizontale = new Label();
+	
+	private Pane paneDeplacement;
+	private Pane pane_hl;
+	
+	private Button sourceButton;
 	
 	// utile pour retrouver les cases à partir de la référence d'un bouton
-	Map<Button, UneCase> mapBoutons = new HashMap();
-
+	private Map<Button, UneCase> mapBoutons = new HashMap();
 	
+
 	@FXML
 	public void on_radio_select_action(Event e){
 		
@@ -172,17 +177,68 @@ public class Gui_controller implements Initializable {
 		 * Deplace un élément déjà sur la grille.
 		 * pour l'instant, il s'agit uniquement d'un bouton.
 		 */
-			
-        Dragboard db = un.startDragAndDrop(TransferMode.MOVE);
-        
+		
+		 Dragboard db = un.startDragAndDrop(TransferMode.MOVE);
+	        
         source = e0.getSource();
-        ((Button) source).setVisible(false);
+        
+        sourceButton = ((Button) source);
+        
+        sourceButton.setVisible(false);
         /* Put a string on a dragboard */
         ClipboardContent content = new ClipboardContent();
         content.putString(un.getText());
         db.setContent(content);
         
-        zero_.setText(((Button)source).getText());
+        zero_.setText(sourceButton.getText());
+		
+		if (selectionMode.get().equals("Case")){
+			
+	        case_hl.setVisible(true);
+		}
+	        
+        else if (selectionMode.get().equals("Ligne")){
+	        
+	        if (! ligne_grabbed){
+	
+				if (mapBoutons.containsKey(source)){
+	
+					ligne_source = rows.get(Utils.arrondirVersPosition(((Button) source).getLayoutY()));
+				    ligne_grabbed = true; 
+				    case_hl.setVisible(false);
+				}
+				else {
+					System.out.println("null !!!");
+				}	
+			}
+	        
+	        double decalage = sourceButton.getLayoutX();
+	
+			paneDeplacement = new Pane();
+			pane_hl = new Pane();
+			
+			grille.getChildren().add(pane_hl);
+			grille.getChildren().add(paneDeplacement);
+			
+            
+            pane_hl.relocate( - decalage, pane_hl.getLayoutY());
+            paneDeplacement.relocate( - decalage, paneDeplacement.getLayoutY());
+			
+			ligne_source.getContenu().stream().forEach(a -> {Button tempButton = (Button) a.getNode();
+				                                             paneDeplacement.getChildren().add(tempButton);
+				                                             
+				                                             Rectangle hl_temp = new Rectangle(25.0, 25.0);
+				                                             hl_temp.setFill(Color.web("#97bbda"));
+				                                             pane_hl.getChildren().add(hl_temp);
+				                                             
+				                                             hl_temp.relocate(tempButton.getLayoutX()  - decalage, 0);
+				                                             tempButton.relocate(tempButton.getLayoutX()  - decalage + 5, 0);
+				                                             tempButton.setVisible(true);
+				                                             
+				                                             System.out.println(tempButton + " " + tempButton.getLayoutX());
+			                                                }
+			                                          );
+        }
 	}
 	
 	public void ligne_vers_ligne_existante(){
@@ -206,13 +262,15 @@ public class Gui_controller implements Initializable {
 		
 		if(source.toString().startsWith("Button") && selectionMode.get().equals("Ligne")){
 			
-			ligne_source = rows.get(Utils.arrondirVersPosition(((Button) source).getLayoutY()));
+			ligne_source = rows.get(Utils.arrondirVersPosition(sourceButton.getLayoutY()));
 			
 			//TODO : meme modifs que pour une case 
 			// zero_.setVisibility()
 			//arrondirVersPosition()
 			//(Button) source
 			// ... mais adapté.
+			
+			// pour l'instant erreur ligne 320
 			
 			// visibilité lors du déplacement
 			copie = Visibilite.visibiliteDeplacement(zero_, this);
@@ -229,13 +287,6 @@ public class Gui_controller implements Initializable {
 			if (rows.containsKey(row_key)){
 						
 				ligne_destination = rows.get(row_key);	
-
-				System.out.println("ligne source : " + ligne_source);
-				System.out.println("ligne destination : " + ligne_destination);
-				
-//				System.out.println(ligne_destination.getPositionVericaleDansBloc());
-//				System.out.println(ligne_source.getPositionVericaleDansBloc());
-				
 
 				if (ligne_destination.getPositionVericaleDansBloc()	 == ligne_source.getPositionVericaleDansBloc()){
 
@@ -284,20 +335,12 @@ public class Gui_controller implements Initializable {
 				
 			ligne_source = rows.get(Utils.arrondirVersPosition(((Button) source).getLayoutY()));
 			
-			System.out.println("liste des rows : " + rows.entrySet());
-			System.out.println(case_hl);
-			System.out.println(case_hl.getLayoutY());
-			System.out.println("Utils.arrondirVersPosition(case_hl.getLayoutY()) : " + Utils.arrondirVersPosition(case_hl.getLayoutY()));
-			System.out.println("Utils.arrondirVersPosition(case_hl.getLayoutX()) : " + Utils.arrondirVersPosition(case_hl.getLayoutX()));
-			
-			System.out.println("mapDesBoutons : " + mapBoutons.entrySet());
-			
+			// gestion de l'effacement
 			if (Utils.arrondirVersPosition(case_hl.getLayoutY()) < 0
 			 || Utils.arrondirVersPosition(case_hl.getLayoutY()) > 26
 			 || Utils.arrondirVersPosition(case_hl.getLayoutX()) < 0
 			 || Utils.arrondirVersPosition(case_hl.getLayoutX()) > 37){
-				
-				System.out.println("___ cas delete ___");
+
 				if (source != null){
 					ligne_source.delContenu(mapBoutons.get(source));
 					mapBoutons.remove(source);
@@ -319,9 +362,6 @@ public class Gui_controller implements Initializable {
 				rows.put(Utils.arrondirVersPosition(case_hl.getLayoutY()), ligne_destination);
 				deleted = false;
 			}
-
-			System.out.println("ligne_destination : " + ligne_destination);
-			System.out.println("ligne_source : " + ligne_source);
 			
 			// deplacement d'une case existante
 			if (! deleted && ligne_source != null){
@@ -352,10 +392,6 @@ public class Gui_controller implements Initializable {
 						
 						// deplace de la grille vers une ligne existante
 						System.out.println("vers ligne existante");
-						
-						System.out.println("copie : " + copie.getProperties());
-						System.out.println("source : " + ((Button) source).getProperties());
-						System.out.println("bouton source : " + ((Button) source).getLayoutX());
 						
 						ligne_destination = rows.get(Utils.arrondirVersPosition(case_hl.getLayoutY()));
 						
@@ -463,61 +499,39 @@ public class Gui_controller implements Initializable {
 	@FXML
 	public void over1(DragEvent e1){
 		
-		if(selectionMode.get().equals("Ligne")){			
-			
-			if (! ligne_grabbed){
-				
-				colonne_source = Utils.arrondir(e1.getSceneX());
-
-				ligne_source = rows.get(Utils.arrondirVersPosition(e1.getSceneY()));
-				
-				System.out.println("ligne source d'après rows.get() : " +  ligne_source);
-				
-				System.out.println("max vers droite : " + ligne_source.getMaxXVersDroite());
-				System.out.println("max vers gauche : " + ligne_source.getMaxXVersGauche());
-				
-				if (rows.containsKey(copie)){
-				
-				    ligne_source.setPositionHorizontaleDansBloc(Utils.arrondir(e1.getSceneY()));
-			        currentLine = ligne_source.getContenu();
-				}
-			    ligne_grabbed = true;
-			}
+		
+		affPositionVerticale.setVisible(false);
+		affPositionHorizontale.setVisible(false);
+		
+		////////////////////////////
+		//
+		//   traitement par ligne
+		//
+		////////////////////////////
+		
+		if(selectionMode.get().equals("Ligne")){	
+		
+			Visibilite.highlightPosSerie(e1, pane_hl, affPositionVerticale, affPositionHorizontale, zero_, paneDeplacement);
 		}
+	    	
+		////////////////////////////
+		//
+		//   traitement par case
+		//
+		////////////////////////////
 		
-		
-		zero_.relocate(e1.getSceneX(), e1.getSceneY());
-		zero_.toFront();
-		
-		
-		
-		
-		if (source.toString().startsWith("Button")){
+		else if (source.toString().startsWith("Button")){
 			
-		    case_hl.relocate(Utils.arrondir(e1.getSceneX()) + 25, Utils.arrondir(e1.getSceneY()) + 25);
-		    case_hl.setVisible(true);
-		    
-		    affPositionVerticale.textProperty().set((Utils.arrondirVersPosition(e1.getSceneY())) + "");
-		    affPositionVerticale.relocate(Utils.arrondir(e1.getSceneX())  + 30, Utils.arrondir(e1.getSceneY()) + 5);
-		    affPositionVerticale.setVisible(true);
-		    
-		    
-		    affPositionHorizontale.textProperty().set((Utils.arrondirVersPosition(e1.getSceneX())) + "");
-		    affPositionHorizontale.relocate(Utils.arrondir(e1.getSceneX()) + 5, Utils.arrondir(e1.getSceneY()) + 30);
-		    affPositionHorizontale.setVisible(true);
-		    
-		    zero_.setVisible(true);
+			Visibilite.highlightPos(e1, case_hl, affPositionVerticale, affPositionHorizontale, zero_);
+			
 		}
 		else if (source.toString().startsWith("Pane")){
+			
 			cursorPane.relocate(Utils.arrondir(e1.getSceneX()) + 25, Utils.arrondir(e1.getSceneY()) + 25);
 			
 		    zero_.setVisible(false);
 		}
-		
-		
-		
-		
-		//zero_.relocate(50.0, 100.0);
+
 	}
 	
 
