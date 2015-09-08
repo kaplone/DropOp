@@ -62,14 +62,23 @@ public class Visibilite {
 			                             Pane cases_hl,
 			                             Label affPositionVerticale,
 			                             Label affPositionHorizontale,
-			                             Button zero_,
-			                             Pane contenu ){
+			                             Pane contenu,
+			                             Button sourceButton){
+		
+		affPositionVerticale.textProperty().set((Utils.arrondirVersPosition(e1.getSceneY())) + "");
+	    affPositionVerticale.relocate(Utils.arrondir(e1.getSceneX())  + 30, Utils.arrondir(e1.getSceneY()) + 5);
+	    affPositionVerticale.setVisible(true);
+	    
+	    
+	    affPositionHorizontale.textProperty().set((Utils.arrondirVersPosition(e1.getSceneX())) + "");
+	    affPositionHorizontale.relocate(Utils.arrondir(e1.getSceneX()) + 5, Utils.arrondir(e1.getSceneY()) + 30);
+	    affPositionHorizontale.setVisible(true);
 		
 		contenu.setPrefHeight(27.0);
 		contenu.setVisible(true);
 		cases_hl.setVisible(true);
-		cases_hl.relocate(Utils.arrondir(e1.getSceneX()) +25, Utils.arrondir(e1.getSceneY()) +25);
-		contenu.relocate(e1.getSceneX() - 25, e1.getSceneY());
+		cases_hl.relocate(Utils.arrondir(e1.getSceneX()) - sourceButton.getLayoutX() + 25, Utils.arrondir(e1.getSceneY()) - sourceButton.getLayoutY() + 25);
+		contenu.relocate(e1.getSceneX() - sourceButton.getLayoutX(), e1.getSceneY() - sourceButton.getLayoutY());
 
 	}
 	

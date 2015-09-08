@@ -37,9 +37,12 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
@@ -137,14 +140,17 @@ public class Gui_controller implements Initializable {
 	
 	private Button sourceButton;
 	
+	private double deltaXStart;
+	private double deltaXEnd;
+	private double deltaX;
+	
 	// utile pour retrouver les cases à partir de la référence d'un bouton
 	private Map<Button, UneCase> mapBoutons = new HashMap();
 	
 
 	@FXML
 	public void on_radio_select_action(Event e){
-		
-		System.out.println(e.getSource().toString().split("'")[1]);
+
 		selectionMode.set(e.getSource().toString().split("'")[1]);
 		
 	}
@@ -176,6 +182,8 @@ public class Gui_controller implements Initializable {
 		/**
 		 * Deplace un élément déjà sur la grille.
 		 * pour l'instant, il s'agit uniquement d'un bouton.
+		 * 
+		 * on commence avec une ligne
 		 */
 		
 		 Dragboard db = un.startDragAndDrop(TransferMode.MOVE);
@@ -183,6 +191,8 @@ public class Gui_controller implements Initializable {
         source = e0.getSource();
         
         sourceButton = ((Button) source);
+        deltaXStart = sourceButton.getLayoutX();
+        System.out.println("deltaXStart : " + deltaXStart);
         
         sourceButton.setVisible(false);
         /* Put a string on a dragboard */
@@ -200,10 +210,14 @@ public class Gui_controller implements Initializable {
         else if (selectionMode.get().equals("Ligne")){
 	        
 	        if (! ligne_grabbed){
-	
+	        	
+	        	System.out.println("attrape une ligne");
+	        	
 				if (mapBoutons.containsKey(source)){
-	
-					ligne_source = rows.get(Utils.arrondirVersPosition(((Button) source).getLayoutY()));
+					
+					int num_ligne_source = Utils.arrondirVersPosition(((Button) source).getLayoutY());
+
+					ligne_source = rows.get(num_ligne_source);
 				    ligne_grabbed = true; 
 				    case_hl.setVisible(false);
 				}
@@ -211,8 +225,6 @@ public class Gui_controller implements Initializable {
 					System.out.println("null !!!");
 				}	
 			}
-	        
-	        double decalage = sourceButton.getLayoutX();
 	
 			paneDeplacement = new Pane();
 			pane_hl = new Pane();
@@ -220,39 +232,37 @@ public class Gui_controller implements Initializable {
 			grille.getChildren().add(pane_hl);
 			grille.getChildren().add(paneDeplacement);
 			
-            
-            pane_hl.relocate( - decalage, pane_hl.getLayoutY());
-            paneDeplacement.relocate( - decalage, paneDeplacement.getLayoutY());
+			paneDeplacement.relocate(0, sourceButton.getLayoutY());
+			pane_hl.relocate(0, sourceButton.getLayoutY());
 			
-			ligne_source.getContenu().stream().forEach(a -> {Button tempButton = (Button) a.getNode();
-				                                             paneDeplacement.getChildren().add(tempButton);
-				                                             
-				                                             Rectangle hl_temp = new Rectangle(25.0, 25.0);
-				                                             hl_temp.setFill(Color.web("#97bbda"));
-				                                             pane_hl.getChildren().add(hl_temp);
-				                                             
-				                                             hl_temp.relocate(tempButton.getLayoutX()  - decalage, 0);
-				                                             tempButton.relocate(tempButton.getLayoutX()  - decalage + 5, 0);
-				                                             tempButton.setVisible(true);
-				                                             
-				                                             System.out.println(tempButton + " " + tempButton.getLayoutX());
+			System.out.println("mapBoutons : " +mapBoutons);
+			System.out.println(ligne_source);
+			System.out.println(ligne_source.getContenu());
+			
+			ligne_source.getContenu().stream().forEach(a -> {Button tempButton = (Button) a.getNode();  // tempButton.equals(sourceButton)
+			                                                 tempButton.setVisible(true);
+			                                                 tempButton.relocate(tempButton.getLayoutX(),0);
+			                                                 
+			                                                 paneDeplacement.getChildren().add(tempButton);
+			
+			                                                 Rectangle hl_temp = new Rectangle(25.0, 25.0);
+			                                                 hl_temp.setFill(Color.web("#97bbda"));
+			                                                 hl_temp.relocate(tempButton.getLayoutX(),0);
+			                                                 
+			                                                 pane_hl.getChildren().add(hl_temp);
+	
 			                                                }
 			                                          );
         }
-	}
-	
-	public void ligne_vers_ligne_existante(){
-		
-	}
-	
-	public void ligne_vers_nouvelle_ligne(){
-		
 	}
 	
 	@FXML
 	public void done(){
 		
 		System.out.println("\n\nnouveau done()\n");
+
+		
+		ligne_grabbed = false;
 		
 		////////////////////////////
 		//
@@ -261,68 +271,51 @@ public class Gui_controller implements Initializable {
 		////////////////////////////
 		
 		if(source.toString().startsWith("Button") && selectionMode.get().equals("Ligne")){
-			
-			ligne_source = rows.get(Utils.arrondirVersPosition(sourceButton.getLayoutY()));
-			
-			//TODO : meme modifs que pour une case 
-			// zero_.setVisibility()
-			//arrondirVersPosition()
-			//(Button) source
-			// ... mais adapté.
-			
-			// pour l'instant erreur ligne 320
-			
-			// visibilité lors du déplacement
-			copie = Visibilite.visibiliteDeplacement(zero_, this);
-			
-			copie.setText(zero_.getText());
-			copie.setMinWidth(27.0);
-			
-			Chiffre ch = new Chiffre(case_hl, copie);
-			
-//			MiseAJour.miseAJourPosition(copie, case_hl);
 
-			int row_key = Utils.arrondirVersPosition(copie.getLayoutY());
+			System.out.println("deltaXEnd : " + deltaXEnd);
+			deltaX = deltaXEnd - deltaXStart;
+			System.out.println("deltaX : " + deltaX);
 			
+			
+			// ligne_source = rows.get(Utils.arrondirVersPosition(sourceButton.getLayoutY())); // deplacement vers detect2
+
+			int row_key = Utils.arrondirVersPosition(pane_hl.getLayoutY());
+			
+			// deplace sur une ligne existante (merge ?)
 			if (rows.containsKey(row_key)){
 						
 				ligne_destination = rows.get(row_key);	
-
-				if (ligne_destination.getPositionVericaleDansBloc()	 == ligne_source.getPositionVericaleDansBloc()){
-
-				// deplace sur la même ligne
-					
-					System.out.println("\ndeplace sur la même ligne\n");
-
-	
-				}
 				
-				else {
-					
-					System.out.println("\ndeplace sur une ligne déjà créée\n");
-					
-				}
 			}
 			// deplace sur une nouvelle ligne
 			else {
 				System.out.println("\ncréation ligne\n");
 				ligne_destination = new Ligne();
-				ligne_destination.setPositionVericaleDansBloc(Utils.arrondirVersPosition(copie.getLayoutY()));
 				
-				System.out.println("source : " + source);
-				//System.out.println("currentline size() : " + currentLine.size());
-				System.out.println("ligne_destination : " + ligne_destination);
-				System.out.println("ligne_source : " + ligne_source);
-				System.out.println("colonne_source : " + colonne_source);
-
+				Integer nouveau = new Integer(Utils.arrondirVersPosition(pane_hl.getLayoutY()));
+				
+				rows.put( nouveau , ligne_destination);
+				
+				paneDeplacement.setLayoutY(pane_hl.getLayoutY());
+				paneDeplacement.setLayoutX(pane_hl.getLayoutX());
+				
+				paneDeplacement.getChildren()
+				               .stream()
+				               .forEach(a -> {ligne_destination.getContenu()
+				            	                               .add(new UneCase(a, ligne_destination, Utils.arrondirVersPosition(a.getLayoutX())));
+				                             });
+				
+				ligne_destination.getContenu().stream()
+				                              .forEach(a -> {utils.ChangeParent.changeParent(a.getNode(),grille);
+				                                             a.getNode().setLayoutY(paneDeplacement.getLayoutY());
+				                                             // il faut un deltaX
+				                                             a.getNode().setLayoutX(Utils.arrondirSimple(a.getNode().getLayoutX() + deltaX));
+				                                             System.out.println(a.getNode().getLayoutY());
+				                     });
 			}
 			
-			ligne_grabbed = false;
-			
-			System.out.println("source : " + ligne_source.getPositionVericaleDansBloc());
-			System.out.println("destination : " + ligne_destination.getPositionVericaleDansBloc());
-			
-			
+			paneDeplacement.setMinSize(500, 27);
+			paneDeplacement.setStyle("-fx-background-color: #9700da55");
 		}
 		
 		////////////////////////////
@@ -375,8 +368,6 @@ public class Gui_controller implements Initializable {
 					MiseAJour.miseAJourPosition(((Button) source), case_hl);
 					((Button) source).setVisible(true);
 					zero_.setVisible(false);
-					
-					System.out.println(mapBoutons);
 
 					mapBoutons.get(source).setPositionSurLigne(Utils.arrondirVersPosition(case_hl.getLayoutX()));
 
@@ -499,6 +490,8 @@ public class Gui_controller implements Initializable {
 	@FXML
 	public void over1(DragEvent e1){
 		
+		System.out.println(e1.getX());
+		deltaXEnd = e1.getX();
 		
 		affPositionVerticale.setVisible(false);
 		affPositionHorizontale.setVisible(false);
@@ -510,8 +503,9 @@ public class Gui_controller implements Initializable {
 		////////////////////////////
 		
 		if(selectionMode.get().equals("Ligne")){	
-		
-			Visibilite.highlightPosSerie(e1, pane_hl, affPositionVerticale, affPositionHorizontale, zero_, paneDeplacement);
+			
+			Visibilite.highlightPosSerie(e1, pane_hl, affPositionVerticale, affPositionHorizontale, paneDeplacement, sourceButton);
+
 		}
 	    	
 		////////////////////////////

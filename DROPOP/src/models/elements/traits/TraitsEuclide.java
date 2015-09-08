@@ -1,9 +1,10 @@
 package models.elements.traits;
 
 import models.Commun;
+import models.Positionnable;
 import utils.ElementType;
 
-public class TraitsEuclide extends Commun {
+public class TraitsEuclide extends Positionnable {
 	
 	/**
 	 * 
@@ -12,8 +13,8 @@ public class TraitsEuclide extends Commun {
 	private int longueurVerticale;
 	private int longueurHorizontale;
 
-	public TraitsEuclide() {
-		super();
+	public TraitsEuclide(int xPosition, int yposition, Positionnable elementParent) {
+		super(xPosition, yposition, elementParent);
 		
 		this.longueurVerticale = 4;
 		this.longueurHorizontale = 2;
