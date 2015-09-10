@@ -213,11 +213,17 @@ public class Gui_controller implements Initializable {
 	        	
 	        	System.out.println("attrape une ligne");
 	        	
+	        	System.out.println(source);
+	        	System.out.println(((Button) source).getLayoutY());
+	        	
 				if (mapBoutons.containsKey(source)){
 					
 					int num_ligne_source = Utils.arrondirVersPosition(((Button) source).getLayoutY());
+					
+					System.out.println(num_ligne_source);
 
 					ligne_source = rows.get(num_ligne_source);
+					System.out.println(ligne_source);
 				    ligne_grabbed = true; 
 				    case_hl.setVisible(false);
 				}
@@ -243,7 +249,16 @@ public class Gui_controller implements Initializable {
 			                                                 tempButton.setVisible(true);
 			                                                 tempButton.relocate(tempButton.getLayoutX(),0);
 			                                                 
-			                                                 paneDeplacement.getChildren().add(tempButton);
+			                                                 try {
+			                                                     paneDeplacement.getChildren().add(tempButton);
+			                                                 }
+			                                                 //TODO regler ici :
+			                                                 // exception quand on deplace sur une meme ligne
+			                                                 // paneDeplacement contient déjà tempButton
+			                                                 
+			                                                 catch (IllegalArgumentException iae){
+			                                                	 System.out.println("exception sur une meme ligne");
+			                                                 }
 			
 			                                                 Rectangle hl_temp = new Rectangle(25.0, 25.0);
 			                                                 hl_temp.setFill(Color.web("#97bbda"));
@@ -272,19 +287,28 @@ public class Gui_controller implements Initializable {
 		
 		if(source.toString().startsWith("Button") && selectionMode.get().equals("Ligne")){
 
-			System.out.println("deltaXEnd : " + deltaXEnd);
 			deltaX = deltaXEnd - deltaXStart;
-			System.out.println("deltaX : " + deltaX);
-			
-			
+
 			// ligne_source = rows.get(Utils.arrondirVersPosition(sourceButton.getLayoutY())); // deplacement vers detect2
 
 			int row_key = Utils.arrondirVersPosition(pane_hl.getLayoutY());
+			
+			/////////
+			//
+			// première conditionnelle :
+			// 
+			// ligne existante / nouvelle ligne
+			//
+			////////
 			
 			// deplace sur une ligne existante (merge ?)
 			if (rows.containsKey(row_key)){
 						
 				ligne_destination = rows.get(row_key);	
+				
+				//TODO
+				// deplace les elements deja presents
+				
 				
 			}
 			// deplace sur une nouvelle ligne
@@ -295,28 +319,45 @@ public class Gui_controller implements Initializable {
 				Integer nouveau = new Integer(Utils.arrondirVersPosition(pane_hl.getLayoutY()));
 				
 				rows.put( nouveau , ligne_destination);
-				
-				paneDeplacement.setLayoutY(pane_hl.getLayoutY());
-				paneDeplacement.setLayoutX(pane_hl.getLayoutX());
-				
+			}
+			
+			paneDeplacement.setLayoutY(pane_hl.getLayoutY());
+			paneDeplacement.setLayoutX(pane_hl.getLayoutX());
+			
+			/////////
+			//
+			// deuxième conditionnelle :
+			// 
+			// ligne différente / même ligne
+			//
+			////////
+			
+			if (! ligne_destination.equals(ligne_source)){
+							
 				paneDeplacement.getChildren()
 				               .stream()
 				               .forEach(a -> {ligne_destination.getContenu()
 				            	                               .add(new UneCase(a, ligne_destination, Utils.arrondirVersPosition(a.getLayoutX())));
-				                             });
-				
-				ligne_destination.getContenu().stream()
-				                              .forEach(a -> {utils.ChangeParent.changeParent(a.getNode(),grille);
-				                                             a.getNode().setLayoutY(paneDeplacement.getLayoutY());
-				                                             // il faut un deltaX
-				                                             a.getNode().setLayoutX(Utils.arrondirSimple(a.getNode().getLayoutX() + deltaX));
-				                                             System.out.println(a.getNode().getLayoutY());
-				                     });
+				                              ligne_source.getContenu()
+				                                          .remove(a);
+				                             });	
 			}
 			
-			paneDeplacement.setMinSize(500, 27);
-			paneDeplacement.setStyle("-fx-background-color: #9700da55");
+			ligne_destination.getContenu().stream()
+							              .forEach(a -> {utils.ChangeParent.changeParent(a.getNode(),grille);
+															                             a.getNode().setLayoutY(paneDeplacement.getLayoutY());
+															                             // il faut un deltaX
+															                             a.getNode().setLayoutX(Utils.arrondirSimple(a.getNode().getLayoutX() + deltaX));
+														 });
+           
+			pane_hl.setVisible(false);
+			affPositionHorizontale.setVisible(false);
+			affPositionVerticale.setVisible(false);
+			
+		   // paneDeplacement.setMinSize(500, 27);
+		   // paneDeplacement.setStyle("-fx-background-color: #9700da55");
 		}
+		
 		
 		////////////////////////////
 		//
@@ -489,8 +530,7 @@ public class Gui_controller implements Initializable {
 	
 	@FXML
 	public void over1(DragEvent e1){
-		
-		System.out.println(e1.getX());
+
 		deltaXEnd = e1.getX();
 		
 		affPositionVerticale.setVisible(false);
