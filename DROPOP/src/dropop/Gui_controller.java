@@ -104,7 +104,7 @@ public class Gui_controller implements Initializable {
 	@FXML
 	private RadioButton radio_operation;
 	
-	private static int tailleQuadrillage = 25;
+	private static int tailleQuadrillage = 50;
 	
 	private Object source;
 	
@@ -206,6 +206,7 @@ public class Gui_controller implements Initializable {
         db.setContent(content);
         
         zero_.setText(sourceButton.getText());
+        zero_.setStyle("-fx-font-size: 18pt");
 		
 		if (selectionMode.get().equals("Case")){
 			
@@ -265,7 +266,7 @@ public class Gui_controller implements Initializable {
 			                                                	 System.out.println("exception sur une meme ligne");
 			                                                 }
 			
-			                                                 Rectangle hl_temp = new Rectangle(25.0, 25.0);
+			                                                 Rectangle hl_temp = new Rectangle(tailleQuadrillage, tailleQuadrillage);
 			                                                 hl_temp.setFill(Color.web("#97bbda"));
 			                                                 hl_temp.relocate(tempButton.getLayoutX(),0);
 			                                                 
@@ -377,9 +378,9 @@ public class Gui_controller implements Initializable {
 			
 			// gestion de l'effacement
 			if (Utils.arrondirVersPosition(case_hl.getLayoutY()) < 0
-			 || Utils.arrondirVersPosition(case_hl.getLayoutY()) > 26
+			 || Utils.arrondirVersPosition(case_hl.getLayoutY()) > 12
 			 || Utils.arrondirVersPosition(case_hl.getLayoutX()) < 0
-			 || Utils.arrondirVersPosition(case_hl.getLayoutX()) > 37){
+			 || Utils.arrondirVersPosition(case_hl.getLayoutX()) > 18){
 
 				if (source != null){
 					ligne_source.delContenu(mapBoutons.get(source));
@@ -470,7 +471,9 @@ public class Gui_controller implements Initializable {
 				copie = Visibilite.visibiliteDeplacement(zero_, this);
 				
 				copie.setText(zero_.getText());
-				copie.setMinWidth(27.0);
+				copie.setStyle("-fx-font-size: 18pt");
+				copie.setMinWidth(tailleQuadrillage);
+				copie.setMinHeight(tailleQuadrillage);
 
 				if (rows.containsKey(Utils.arrondirVersPosition(case_hl.getLayoutY()))){
 					
@@ -622,7 +625,7 @@ public class Gui_controller implements Initializable {
 		}
 		else if (source.toString().startsWith("Pane")){
 			
-			cursorPane.relocate(Utils.arrondir(e1.getSceneX()) + 25, Utils.arrondir(e1.getSceneY()) + 25);
+			cursorPane.relocate(Utils.arrondir(e1.getSceneX()) + tailleQuadrillage, Utils.arrondir(e1.getSceneY()) + tailleQuadrillage);
 			
 		    zero_.setVisible(false);
 		}
@@ -684,6 +687,9 @@ public class Gui_controller implements Initializable {
 		zero_.setVisible(false);
 		zero_.relocate(-30.0, -30.0);
 		case_hl.relocate(-30.0, -30.0);
+		case_hl.setStyle("-fx-font-size: 18pt");
+		case_hl.setWidth(tailleQuadrillage);
+		case_hl.setHeight(tailleQuadrillage);
 		
 		//liste_boutons = new ArrayList<>();
 		lignes_h = new ArrayList<>();
@@ -696,22 +702,22 @@ public class Gui_controller implements Initializable {
 		affPositionHorizontale.setTextFill(Color.web("#0076a390"));
 		affPositionVerticale.setTextFill(Color.web("#0076a390"));
 		
-		for (int i = 1; i < 40; i++){
+		for (int i = 1; i < 21; i++){
 			ligne_v = new Line();
 			ligne_v.setOpacity(0.3);
 			ligne_v.getStrokeDashArray().addAll(5.0, 5.0);
-			ligne_v.setStartX(25);
-			ligne_v.setEndX(975);
-			ligne_v.setStartY(i * 25);
-			ligne_v.setEndY(i * 25);
+			ligne_v.setStartX(tailleQuadrillage);
+			ligne_v.setEndX(1000);
+			ligne_v.setStartY(i * tailleQuadrillage);
+			ligne_v.setEndY(i * tailleQuadrillage);
 			lignes_v.add(ligne_v);
 			
 			ligne_h = new Line();
 			ligne_h.setOpacity(0.3);
 			ligne_h.getStrokeDashArray().addAll(5.0, 5.0);
-			ligne_h.setStartY(25);
-			ligne_h.setStartX(i * 25);
-			ligne_h.setEndX(i * 25);
+			ligne_h.setStartY(tailleQuadrillage);
+			ligne_h.setStartX(i * tailleQuadrillage);
+			ligne_h.setEndX(i * tailleQuadrillage);
 			ligne_h.setEndY(700);
 			lignes_h.add(ligne_h);
 		}

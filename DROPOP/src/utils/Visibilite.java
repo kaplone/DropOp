@@ -13,6 +13,8 @@ import javafx.scene.shape.Rectangle;
 
 public class Visibilite {
 	
+	private static int l = Gui_controller.getTailleQuadrillage();
+	
 	public static Button visibiliteDeplacement(Button zero_, Gui_controller gui){
 		
 		// objet visible pendant le déplacement
@@ -38,7 +40,7 @@ public class Visibilite {
 			                        Label affPositionHorizontale,
 			                        Button zero_ ){
 
-		case_hl.relocate(Utils.arrondir(e1.getSceneX()) + 25, Utils.arrondir(e1.getSceneY()) + 25);
+		case_hl.relocate(Utils.arrondir(e1.getSceneX()) + l, Utils.arrondir(e1.getSceneY()) + l);
 	    case_hl.setVisible(true);
 	    
 	    affPositionVerticale.textProperty().set((Utils.arrondirVersPosition(e1.getSceneY())) + "");
@@ -74,10 +76,10 @@ public class Visibilite {
 	    affPositionHorizontale.relocate(Utils.arrondir(e1.getSceneX()) + 5, Utils.arrondir(e1.getSceneY()) + 30);
 	    affPositionHorizontale.setVisible(true);
 		
-		contenu.setPrefHeight(27.0);
+		contenu.setPrefHeight(l + l * 0.1);
 		contenu.setVisible(true);
 		cases_hl.setVisible(true);
-		cases_hl.relocate(Utils.arrondir(e1.getSceneX()) - sourceButton.getLayoutX() + 25, Utils.arrondir(e1.getSceneY()) - sourceButton.getLayoutY() + 25);
+		cases_hl.relocate(Utils.arrondir(e1.getSceneX()) - sourceButton.getLayoutX() + l, Utils.arrondir(e1.getSceneY()) - sourceButton.getLayoutY() + l);
 		contenu.relocate(e1.getSceneX() - sourceButton.getLayoutX(), e1.getSceneY() - sourceButton.getLayoutY());
 
 	}
@@ -86,7 +88,7 @@ public class Visibilite {
     		                     Rectangle case_hl,
     		                     Button zero_ ){
     	
-		case_hl.relocate(Utils.arrondir(e1.getSceneX()) + 25, Utils.arrondir(e1.getSceneY()) + 25);
+		case_hl.relocate(Utils.arrondir(e1.getSceneX()) + l, Utils.arrondir(e1.getSceneY()) + l);
 	    case_hl.setVisible(true);
 	    
 	    zero_.setVisible(true);
