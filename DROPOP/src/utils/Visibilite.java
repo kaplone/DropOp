@@ -44,18 +44,46 @@ public class Visibilite {
 	    case_hl.setVisible(true);
 	    
 	    affPositionVerticale.textProperty().set((Utils.arrondirVersPosition(e1.getSceneY())) + "");
-	    affPositionVerticale.relocate(Utils.arrondir(e1.getSceneX())  + 30, Utils.arrondir(e1.getSceneY()) + 5);
+	    affPositionVerticale.relocate(Utils.arrondir(e1.getSceneX())  + 60, Utils.arrondir(e1.getSceneY()) + 25);
 	    affPositionVerticale.setVisible(true);
 	    
 	    
 	    affPositionHorizontale.textProperty().set((Utils.arrondirVersPosition(e1.getSceneX())) + "");
-	    affPositionHorizontale.relocate(Utils.arrondir(e1.getSceneX()) + 5, Utils.arrondir(e1.getSceneY()) + 30);
+	    affPositionHorizontale.relocate(Utils.arrondir(e1.getSceneX()) + 25, Utils.arrondir(e1.getSceneY()) + 60);
 	    affPositionHorizontale.setVisible(true);
 	    
 	    zero_.setVisible(true);
 
 		zero_.relocate(e1.getSceneX(), e1.getSceneY());
 		zero_.toFront();
+		
+	}
+	
+	public static void highlightPosDot(DragEvent e1,
+						               Rectangle case_hl,
+						               Button zero_ ){
+		
+		
+		case_hl.relocate(Utils.arrondir(e1.getSceneX()) + l + 37.5, Utils.arrondir(e1.getSceneY()) + l + 12.5);
+		case_hl.setVisible(true);
+		
+		
+//		
+//		affPositionVerticale.textProperty().set((Utils.arrondirVersPosition(e1.getSceneY())) + "");
+//		affPositionVerticale.relocate(Utils.arrondir(e1.getSceneX())  + 60, Utils.arrondir(e1.getSceneY()) + 25);
+//		affPositionVerticale.setVisible(true);
+//		
+//		
+//		affPositionHorizontale.textProperty().set((Utils.arrondirVersPosition(e1.getSceneX())) + "");
+//		affPositionHorizontale.relocate(Utils.arrondir(e1.getSceneX()) + 25, Utils.arrondir(e1.getSceneY()) + 60);
+//		affPositionHorizontale.setVisible(true);
+		
+		zero_.setVisible(true);
+		
+		zero_.relocate(e1.getSceneX(), e1.getSceneY());
+		zero_.toFront();
+		
+		case_hl.toFront(); // n'est pourtant pas au premier plan
 		
 	}
 	
@@ -68,15 +96,15 @@ public class Visibilite {
 			                             Button sourceButton){
 		
 		affPositionVerticale.textProperty().set((Utils.arrondirVersPosition(e1.getSceneY())) + "");
-	    affPositionVerticale.relocate(Utils.arrondir(e1.getSceneX())  + 30, Utils.arrondir(e1.getSceneY()) + 5);
+	    affPositionVerticale.relocate(Utils.arrondir(e1.getSceneX())  + 60, Utils.arrondir(e1.getSceneY()) + 25);
 	    affPositionVerticale.setVisible(true);
 	    
 	    
 	    affPositionHorizontale.textProperty().set((Utils.arrondirVersPosition(e1.getSceneX())) + "");
-	    affPositionHorizontale.relocate(Utils.arrondir(e1.getSceneX()) + 5, Utils.arrondir(e1.getSceneY()) + 30);
+	    affPositionHorizontale.relocate(Utils.arrondir(e1.getSceneX()) + 25, Utils.arrondir(e1.getSceneY()) + 60);
 	    affPositionHorizontale.setVisible(true);
 		
-		contenu.setPrefHeight(l + l * 0.1);
+		contenu.setPrefHeight(l);
 		contenu.setVisible(true);
 		cases_hl.setVisible(true);
 		cases_hl.relocate(Utils.arrondir(e1.getSceneX()) - sourceButton.getLayoutX() + l, Utils.arrondir(e1.getSceneY()) - sourceButton.getLayoutY() + l);

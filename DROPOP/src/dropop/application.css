@@ -1,6 +1,16 @@
 .button {
+    -fx-border-color: #ffffff;
     -fx-background-color: #ffffff;
     -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
     -fx-font-size: 30pt;
     -fx-text-fill: #181818;
+    -fx-effect: null;
+    -fx-border-width: 0;
+    -fx-padding: 1 8;
+    -fx-focus-color: transparent
 }
+.button:focused{
+     -fx-focus-color: transparent;
+}
+
+.root { -fx-focus-color: transparent; }

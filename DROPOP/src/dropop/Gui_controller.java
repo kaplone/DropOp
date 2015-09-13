@@ -91,6 +91,8 @@ public class Gui_controller implements Initializable {
 	private Line div_h;
 	@FXML
 	private Line div_v;
+	@FXML
+	private Line line_h;
 	
     @FXML
     private Button exportButton;
@@ -103,6 +105,11 @@ public class Gui_controller implements Initializable {
 	private RadioButton radio_bloc;
 	@FXML
 	private RadioButton radio_operation;
+	
+	@FXML
+	private Pane potence;
+	@FXML
+	private Pane Horizontale;
 	
 	private static int tailleQuadrillage = 50;
 	
@@ -149,6 +156,8 @@ public class Gui_controller implements Initializable {
 	private double deltaXEnd;
 	private double deltaX;
 	
+	
+	
 	// utile pour retrouver les cases à partir de la référence d'un bouton
 	private Map<Button, UneCase> mapBoutons = new HashMap();
 	
@@ -178,8 +187,6 @@ public class Gui_controller implements Initializable {
         db.setContent(content);
         
         zero_.setText(((Button)e0.getSource()).getText());
-        
-        //zero_.relocate(50.0, 100.0);
 	}
 	@FXML
 	public void detect2(Event e0){
@@ -471,9 +478,17 @@ public class Gui_controller implements Initializable {
 				copie = Visibilite.visibiliteDeplacement(zero_, this);
 				
 				copie.setText(zero_.getText());
-				copie.setStyle("-fx-font-size: 18pt");
-				copie.setMinWidth(tailleQuadrillage);
-				copie.setMinHeight(tailleQuadrillage);
+				
+				if (copie.getText().equals(".")){
+					copie.setStyle("-fx-font-size: 12pt");
+					copie.setMinWidth(tailleQuadrillage / 2);
+					copie.setMinHeight(tailleQuadrillage / 2);
+				}
+				else {
+					copie.setStyle("-fx-font-size: 18pt");
+					copie.setMinWidth(tailleQuadrillage);
+					copie.setMinHeight(tailleQuadrillage);
+				}
 
 				if (rows.containsKey(Utils.arrondirVersPosition(case_hl.getLayoutY()))){
 					
@@ -519,30 +534,38 @@ public class Gui_controller implements Initializable {
 		}
 
 		else if (source.toString().startsWith("Pane")){
-			cursorPane.toFront();
+			
 	        liste_panes.add(cursorPane);
 			
 	        
 		}
+		cursorPane.toFront();
      }
 	
 	@FXML
 	public void export(){
+		
+		
 		
 		rootPane.getStylesheets().clear();  
 		rootPane.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 		
 		double minX;
 		double minY;
+		double maxX;
+		double maxY;
 		
 		Comparator<Button> compButtonsX = new Comparator<Button>() {
 
 			@Override
 			public int compare(Button o1, Button o2) {
 				if (o1.getLayoutX() < o2.getLayoutX()){
-					return 0;
+					return -1;
 				}
-				return 1;
+				else {
+					return 1;
+				}
+				
 			}
 		};
 		
@@ -551,11 +574,14 @@ public class Gui_controller implements Initializable {
 			@Override
 			public int compare(Button o1, Button o2) {
 				if (o1.getLayoutY() < o2.getLayoutY()){
-					return 0;
+					return -1;
 				}
-				return 1;
+				else {
+					return 1;
+				}
 			}
 		};
+
 		
 		minX = mapBoutons.keySet()
 				         .stream()
@@ -564,15 +590,30 @@ public class Gui_controller implements Initializable {
 				         .getLayoutX();
 		
 		minY = mapBoutons.keySet()
-		         .stream()
-		         .min(compButtonsY)
-		         .get()
-		         .getLayoutY();
+				         .stream()
+				         .min(compButtonsY)
+				         .get()
+				         .getLayoutY();
+		
+		maxX = mapBoutons.keySet()
+				         .stream()
+				         .max(compButtonsX)
+				         .get()
+				         .getLayoutX();
+
+		maxY = mapBoutons.keySet()
+				         .stream()
+				         .max(compButtonsY)
+				         .get()
+				         .getLayoutY();
 
 		grille.setVisible(false);
 		
 		SnapshotParameters sp = new SnapshotParameters();
-		sp.setViewport(new Rectangle2D(minX, minY, 150, 100));
+		sp.setViewport(new Rectangle2D(minX,
+				                       minY,
+				                       maxX - minX + tailleQuadrillage,
+				                       maxY - minY + tailleQuadrillage));
 
 		WritableImage image = rootPane.snapshot(sp, null);
 		
@@ -620,7 +661,19 @@ public class Gui_controller implements Initializable {
 		
 		else if (source.toString().startsWith("Button")){
 			
-			Visibilite.highlightPos(e1, case_hl, affPositionVerticale, affPositionHorizontale, zero_);
+			if (((Button)source).getId().equals("dot")){
+				rootPane.getChildren().remove(case_hl);
+				rootPane.getChildren().add(case_hl);
+				case_hl.setWidth(25);
+				case_hl.setHeight(25);
+				Visibilite.highlightPosDot(e1, case_hl, zero_);
+	        }
+			else {
+				case_hl.toBack();
+				case_hl.setWidth(50);
+				case_hl.setHeight(50);
+			    Visibilite.highlightPos(e1, case_hl, affPositionVerticale, affPositionHorizontale, zero_);
+			}
 			
 		}
 		else if (source.toString().startsWith("Pane")){
@@ -639,6 +692,7 @@ public class Gui_controller implements Initializable {
         
         source = e2.getSource();
         
+        
         /* Put a string on a dragboard */
         ClipboardContent content = new ClipboardContent();
         content.putString(e2.getSource().toString());
@@ -649,26 +703,40 @@ public class Gui_controller implements Initializable {
         cursorPane.setLayoutX(100);
         cursorPane.setLayoutY(100);
         
-        Circle circle = new Circle();
-        circle.setCenterX(100.0f);
-        circle.setCenterY(100.0f);
-        circle.setRadius(50.0f);
+        if (((Pane) source).getId().equals("potence")){
+        	
+        	Line lh = new Line();
+        	lh.setStrokeWidth(4);
+            Line lv = new Line();
+            lv.setStrokeWidth(4);
+            lh.setStartX(div_h.getStartX());
+            lh.setStartY(div_h.getStartY());
+            lh.setEndX(div_h.getEndX() + 10);
+            lh.setEndY(div_h.getEndY());
+            lv.setStartX(div_v.getStartX());
+            lv.setStartY(div_v.getStartY() - 70);
+            lv.setEndX(div_v.getEndX());
+            lv.setEndY(div_v.getEndY());
+            
+            
+            
+            cursorPane.getChildren().add(lh);
+            cursorPane.getChildren().add(lv);
+        }
+        else if (((Pane) source).getId().equals("horizontale")){
+        	Line lh = new Line();
+        	lh.setStrokeWidth(4);
+        	lh.setStartX(line_h.getStartX() - 20);
+            lh.setStartY(line_h.getStartY() - 20);
+            lh.setEndX(line_h.getEndX() + 50);
+            lh.setEndY(line_h.getEndY() - 20);
+            
+            cursorPane.getChildren().add(lh);
+        }
+
+       
+
         
-        Line lh = new Line();
-        Line lv = new Line();
-        lh.setStartX(div_h.getStartX());
-        lh.setStartY(div_h.getStartY());
-        lh.setEndX(div_h.getEndX());
-        lh.setEndY(div_h.getEndY());
-        lv.setStartX(div_v.getStartX());
-        lv.setStartY(div_v.getStartY() - 50);
-        lv.setEndX(div_v.getEndX());
-        lv.setEndY(div_v.getEndY() - 50);
-        
-        
-        
-        cursorPane.getChildren().add(lh);
-        cursorPane.getChildren().add(lv);
         
         rootPane.getChildren().add(cursorPane);
 
