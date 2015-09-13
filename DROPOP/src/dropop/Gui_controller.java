@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -60,6 +61,7 @@ import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -89,6 +91,9 @@ public class Gui_controller implements Initializable {
 	private Line div_h;
 	@FXML
 	private Line div_v;
+	
+    @FXML
+    private Button exportButton;
 	
 	@FXML
 	private RadioButton radio_element;
@@ -329,6 +334,7 @@ public class Gui_controller implements Initializable {
 			// deuxième conditionnelle :
 			// 
 			// ligne différente / même ligne
+			// sinon problème avec "ligne_source.getContenu().remove(a)"
 			//
 			////////
 			
@@ -513,18 +519,73 @@ public class Gui_controller implements Initializable {
 			cursorPane.toFront();
 	        liste_panes.add(cursorPane);
 			
-	        WritableImage image = cursorPane.snapshot(new SnapshotParameters(), null);
-
-	        // TODO: probably use a file chooser here
-	        File file = new File("/home/kaplone/Desktop/chart.png");
-
-	        try {
-	            ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
-	        } catch (IOException e) {
-	            // TODO: handle exception here
-	        }
+	        
 		}
      }
+	
+	@FXML
+	public void export(){
+		
+		rootPane.getStylesheets().clear();  
+		rootPane.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+		
+		double minX;
+		double minY;
+		
+		Comparator<Button> compButtonsX = new Comparator<Button>() {
+
+			@Override
+			public int compare(Button o1, Button o2) {
+				if (o1.getLayoutX() < o2.getLayoutX()){
+					return 0;
+				}
+				return 1;
+			}
+		};
+		
+		Comparator<Button> compButtonsY = new Comparator<Button>() {
+
+			@Override
+			public int compare(Button o1, Button o2) {
+				if (o1.getLayoutY() < o2.getLayoutY()){
+					return 0;
+				}
+				return 1;
+			}
+		};
+		
+		minX = mapBoutons.keySet()
+				         .stream()
+				         .min(compButtonsX)
+				         .get()
+				         .getLayoutX();
+		
+		minY = mapBoutons.keySet()
+		         .stream()
+		         .min(compButtonsY)
+		         .get()
+		         .getLayoutY();
+
+		grille.setVisible(false);
+		
+		SnapshotParameters sp = new SnapshotParameters();
+		sp.setViewport(new Rectangle2D(minX, minY, 150, 100));
+
+		WritableImage image = rootPane.snapshot(sp, null);
+		
+		grille.setVisible(true);
+		rootPane.getStylesheets().clear();  
+		rootPane.getStylesheets().add(getClass().getResource("application_neutre.css").toExternalForm());
+
+        // TODO: probably use a file chooser here
+        File file = new File("/home/kaplone/Desktop/chart.png");
+
+        try {
+            ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
+        } catch (IOException e) {
+            // TODO: handle exception here
+        }
+	}
 	
 	
 	

@@ -1,0 +1,6 @@
+.button {
+    -fx-background-color: #ffffff;
+    -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+    -fx-font-size: 9pt;
+    -fx-text-fill: #181818;
+}

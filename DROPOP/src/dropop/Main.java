@@ -15,7 +15,7 @@ public class Main extends Application {
 		try {
 			Pane root = new Pane();
 			Scene scene = new Scene((Parent) JfxUtils.loadFxml("gui.fxml"), 1275, 722);
-			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			scene.getStylesheets().add(getClass().getResource("application_neutre.css").toExternalForm());
 			primaryStage.setScene(scene);
 			primaryStage.show();
 		} catch(Exception e) {
