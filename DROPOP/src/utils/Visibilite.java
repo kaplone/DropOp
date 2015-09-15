@@ -40,21 +40,25 @@ public class Visibilite {
 			                        Label affPositionHorizontale,
 			                        Button zero_ ){
 
-		case_hl.relocate(Utils.arrondir(e1.getSceneX()) + l, Utils.arrondir(e1.getSceneY()) + l);
+		case_hl.relocate(Utils.arrondir(e1.getSceneX()) + l,
+				         Utils.arrondir(e1.getSceneY()) + l);
 	    case_hl.setVisible(true);
 	    
 	    affPositionVerticale.textProperty().set((Utils.arrondirVersPosition(e1.getSceneY())) + "");
-	    affPositionVerticale.relocate(Utils.arrondir(e1.getSceneX())  + 60, Utils.arrondir(e1.getSceneY()) + 25);
+	    affPositionVerticale.relocate(Utils.arrondir(e1.getSceneX())  + 60,
+	    		                      Utils.arrondir(e1.getSceneY()) + 25);
 	    affPositionVerticale.setVisible(true);
 	    
 	    
 	    affPositionHorizontale.textProperty().set((Utils.arrondirVersPosition(e1.getSceneX())) + "");
-	    affPositionHorizontale.relocate(Utils.arrondir(e1.getSceneX()) + 25, Utils.arrondir(e1.getSceneY()) + 60);
+	    affPositionHorizontale.relocate(Utils.arrondir(e1.getSceneX()) + 25,
+	    		                        Utils.arrondir(e1.getSceneY()) + 60);
 	    affPositionHorizontale.setVisible(true);
 	    
 	    zero_.setVisible(true);
 
-		zero_.relocate(e1.getSceneX(), e1.getSceneY());
+		zero_.relocate(e1.getSceneX(),
+				       e1.getSceneY());
 		zero_.toFront();
 		
 	}
@@ -64,23 +68,14 @@ public class Visibilite {
 						               Button zero_ ){
 		
 		
-		case_hl.relocate(Utils.arrondir(e1.getSceneX()) + l + 37.5, Utils.arrondir(e1.getSceneY()) + l + 12.5);
+		case_hl.relocate(Utils.arrondir(e1.getSceneX()) + l + 37.5,
+				         Utils.arrondir(e1.getSceneY()) + l + 12.5);
 		case_hl.setVisible(true);
-		
-		
-//		
-//		affPositionVerticale.textProperty().set((Utils.arrondirVersPosition(e1.getSceneY())) + "");
-//		affPositionVerticale.relocate(Utils.arrondir(e1.getSceneX())  + 60, Utils.arrondir(e1.getSceneY()) + 25);
-//		affPositionVerticale.setVisible(true);
-//		
-//		
-//		affPositionHorizontale.textProperty().set((Utils.arrondirVersPosition(e1.getSceneX())) + "");
-//		affPositionHorizontale.relocate(Utils.arrondir(e1.getSceneX()) + 25, Utils.arrondir(e1.getSceneY()) + 60);
-//		affPositionHorizontale.setVisible(true);
 		
 		zero_.setVisible(true);
 		
-		zero_.relocate(e1.getSceneX(), e1.getSceneY());
+		zero_.relocate(e1.getSceneX(),
+				       e1.getSceneY());
 		zero_.toFront();
 		
 		case_hl.toFront(); // n'est pourtant pas au premier plan
@@ -96,32 +91,40 @@ public class Visibilite {
 			                             Button sourceButton){
 		
 		affPositionVerticale.textProperty().set((Utils.arrondirVersPosition(e1.getSceneY())) + "");
-	    affPositionVerticale.relocate(Utils.arrondir(e1.getSceneX())  + 60, Utils.arrondir(e1.getSceneY()) + 25);
+	    affPositionVerticale.relocate(Utils.arrondir(e1.getSceneX()) + 60,
+	    		                      Utils.arrondir(e1.getSceneY()) + 25);
 	    affPositionVerticale.setVisible(true);
 	    
 	    
 	    affPositionHorizontale.textProperty().set((Utils.arrondirVersPosition(e1.getSceneX())) + "");
-	    affPositionHorizontale.relocate(Utils.arrondir(e1.getSceneX()) + 25, Utils.arrondir(e1.getSceneY()) + 60);
+	    affPositionHorizontale.relocate(Utils.arrondir(e1.getSceneX()) + 25,
+	    		                        Utils.arrondir(e1.getSceneY()) + 60);
 	    affPositionHorizontale.setVisible(true);
 		
 		contenu.setPrefHeight(l);
 		contenu.setVisible(true);
 		cases_hl.setVisible(true);
-		cases_hl.relocate(Utils.arrondir(e1.getSceneX()) - sourceButton.getLayoutX() + l, Utils.arrondir(e1.getSceneY()) - sourceButton.getLayoutY() + l);
-		contenu.relocate(e1.getSceneX() - sourceButton.getLayoutX(), e1.getSceneY() - sourceButton.getLayoutY());
-
+		
+		cases_hl.relocate(Utils.arrondir(e1.getSceneX()) - sourceButton.getLayoutX() + l,
+				          Utils.arrondir(e1.getSceneY()) - sourceButton.getLayoutY() + l);
+		
+		contenu.relocate(e1.getSceneX() - sourceButton.getLayoutX(),
+				         e1.getSceneY() - sourceButton.getLayoutY());
 	}
 	
     public static void highlight(DragEvent e1,
     		                     Rectangle case_hl,
     		                     Button zero_ ){
     	
-		case_hl.relocate(Utils.arrondir(e1.getSceneX()) + l, Utils.arrondir(e1.getSceneY()) + l);
+		case_hl.relocate(Utils.arrondir(e1.getSceneX()) + l,
+				         Utils.arrondir(e1.getSceneY()) + l);
+		
 	    case_hl.setVisible(true);
 	    
 	    zero_.setVisible(true);
 	    
-	    zero_.relocate(e1.getSceneX(), e1.getSceneY());
+	    zero_.relocate(e1.getSceneX(),
+	    		       e1.getSceneY());
 		zero_.toFront();
 		
 	}

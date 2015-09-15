@@ -42,6 +42,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
@@ -110,6 +111,9 @@ public class Gui_controller implements Initializable {
 	private Pane potence;
 	@FXML
 	private Pane Horizontale;
+	
+	@FXML
+	private VBox toolbox;
 	
 	private static int tailleQuadrillage = 50;
 	
@@ -188,6 +192,7 @@ public class Gui_controller implements Initializable {
         
         zero_.setText(((Button)e0.getSource()).getText());
 	}
+	
 	@FXML
 	public void detect2(Event e0){
 		
@@ -204,7 +209,6 @@ public class Gui_controller implements Initializable {
         
         sourceButton = ((Button) source);
         deltaXStart = sourceButton.getLayoutX();
-        System.out.println("deltaXStart : " + deltaXStart);
         
         sourceButton.setVisible(false);
         /* Put a string on a dragboard */
@@ -224,25 +228,14 @@ public class Gui_controller implements Initializable {
 	        
 	        if (! ligne_grabbed){
 	        	
-	        	System.out.println("attrape une ligne");
-	        	
-	        	System.out.println(source);
-	        	System.out.println(((Button) source).getLayoutY());
-	        	
 				if (mapBoutons.containsKey(source)){
 					
 					int num_ligne_source = Utils.arrondirVersPosition(((Button) source).getLayoutY());
-					
-					System.out.println(num_ligne_source);
 
 					ligne_source = rows.get(num_ligne_source);
-					System.out.println(ligne_source);
 				    ligne_grabbed = true; 
 				    case_hl.setVisible(false);
 				}
-				else {
-					System.out.println("null !!!");
-				}	
 			}
 	
 			paneDeplacement = new Pane();
@@ -253,11 +246,7 @@ public class Gui_controller implements Initializable {
 			
 			paneDeplacement.relocate(0, sourceButton.getLayoutY());
 			pane_hl.relocate(0, sourceButton.getLayoutY());
-			
-			System.out.println("mapBoutons : " +mapBoutons);
-			System.out.println(ligne_source);
-			System.out.println(ligne_source.getContenu());
-			
+
 			ligne_source.getContenu().stream().forEach(a -> {Button tempButton = (Button) a.getNode();  // tempButton.equals(sourceButton)
 			                                                 tempButton.setVisible(true);
 			                                                 tempButton.relocate(tempButton.getLayoutX(),0);
@@ -270,7 +259,6 @@ public class Gui_controller implements Initializable {
 			                                                 // paneDeplacement contient déjà tempButton
 			                                                 
 			                                                 catch (IllegalArgumentException iae){
-			                                                	 System.out.println("exception sur une meme ligne");
 			                                                 }
 			
 			                                                 Rectangle hl_temp = new Rectangle(tailleQuadrillage, tailleQuadrillage);
@@ -286,10 +274,7 @@ public class Gui_controller implements Initializable {
 	
 	@FXML
 	public void done(){
-		
-		System.out.println("\n\nnouveau done()\n");
 
-		
 		ligne_grabbed = false;
 		
 		////////////////////////////
@@ -326,7 +311,6 @@ public class Gui_controller implements Initializable {
 			}
 			// deplace sur une nouvelle ligne
 			else {
-				System.out.println("\ncréation ligne\n");
 				ligne_destination = new Ligne();
 				
 				Integer nouveau = new Integer(Utils.arrondirVersPosition(pane_hl.getLayoutY()));
@@ -367,9 +351,7 @@ public class Gui_controller implements Initializable {
 			pane_hl.setVisible(false);
 			affPositionHorizontale.setVisible(false);
 			affPositionVerticale.setVisible(false);
-			
-		   // paneDeplacement.setMinSize(500, 27);
-		   // paneDeplacement.setStyle("-fx-background-color: #9700da55");
+
 		}
 		
 		
@@ -380,6 +362,9 @@ public class Gui_controller implements Initializable {
 		////////////////////////////
 				
 		else if(selectionMode.get().equals("Case") && source.toString().startsWith("Button")){
+			
+			case_hl.setVisible(false);
+
 				
 			ligne_source = rows.get(Utils.arrondirVersPosition(((Button) source).getLayoutY()));
 			
@@ -400,12 +385,10 @@ public class Gui_controller implements Initializable {
 				deleted = true;
 			}
 			else if (rows.containsKey((Utils.arrondirVersPosition(case_hl.getLayoutY())))){
-				System.out.println("ligne déjà présente");
 				ligne_destination = rows.get(Utils.arrondirVersPosition(case_hl.getLayoutY()));
 				deleted = false;
 			}
 			else{
-				System.out.println("ligne à créer");
 				ligne_destination = new Ligne(null, bloc, Utils.arrondirVersPosition(case_hl.getLayoutY()));
 				rows.put(Utils.arrondirVersPosition(case_hl.getLayoutY()), ligne_destination);
 				deleted = false;
@@ -413,12 +396,11 @@ public class Gui_controller implements Initializable {
 			
 			// deplacement d'une case existante
 			if (! deleted && ligne_source != null){
-
-				System.out.println("depuis la grille");
+				
+				sourceButton.toFront();
 
 				// déplacement sur la meme ligne
 				if (ligne_source.equals(ligne_destination)){
-					System.out.println("sur une meme ligne");
 				
 					MiseAJour.miseAJourPosition(((Button) source), case_hl);
 					((Button) source).setVisible(true);
@@ -429,7 +411,6 @@ public class Gui_controller implements Initializable {
 				}
 				// déplacement sur une autre ligne
 				else{
-					System.out.println("sur une autre ligne");
 					MiseAJour.miseAJourPosition(((Button) source), case_hl);
 					((Button) source).setVisible(true);
 					zero_.setVisible(false);
@@ -437,8 +418,7 @@ public class Gui_controller implements Initializable {
 					if (rows.containsKey(Utils.arrondirVersPosition(case_hl.getLayoutY()))){
 						
 						// deplace de la grille vers une ligne existante
-						System.out.println("vers ligne existante");
-						
+
 						ligne_destination = rows.get(Utils.arrondirVersPosition(case_hl.getLayoutY()));
 						
 						ligne_destination.addContenu(mapBoutons.get(source));
@@ -451,8 +431,7 @@ public class Gui_controller implements Initializable {
 					else {
 						
 						// deplace de la grille vers une nouvelle ligne
-						System.out.println("vers une nouvelle ligne");
-
+						
 						ligne_destination = new Ligne(null, bloc, Utils.arrondirVersPosition(case_hl.getLayoutY()));
 						
 						ligne_destination.addContenu(mapBoutons.get(source));
@@ -471,8 +450,6 @@ public class Gui_controller implements Initializable {
 			
 			
 			else if (! deleted){
-				
-				System.out.println("depuis le pavé");
 				
 				// visibilité lors du déplacement
 				copie = Visibilite.visibiliteDeplacement(zero_, this);
@@ -493,7 +470,6 @@ public class Gui_controller implements Initializable {
 				if (rows.containsKey(Utils.arrondirVersPosition(case_hl.getLayoutY()))){
 					
 					// deplace du pavé numerique vers une ligne existante
-					System.out.println("vers ligne existante");
 					
 					ligne_destination = rows.get(Utils.arrondirVersPosition(case_hl.getLayoutY()));
 					UneCase nouvelleCase = new UneCase(copie, ligne_destination, Utils.arrondirVersPosition(case_hl.getLayoutX()));
@@ -509,7 +485,6 @@ public class Gui_controller implements Initializable {
 				else {
 					
 					// deplace du pavé numerique vers une nouvelle ligne
-					System.out.println("vers une nouvelle ligne");
 
 					ligne_destination = new Ligne(null, bloc, Utils.arrondirVersPosition(case_hl.getLayoutY()));
 					UneCase nouvelleCase = new UneCase(copie, ligne_destination, Utils.arrondirVersPosition(case_hl.getLayoutX()));
@@ -539,7 +514,9 @@ public class Gui_controller implements Initializable {
 			
 	        
 		}
-		cursorPane.toFront();
+		if (cursorPane != null) {
+		    cursorPane.toFront();
+		}
      }
 	
 	@FXML
@@ -631,8 +608,6 @@ public class Gui_controller implements Initializable {
         }
 	}
 	
-	
-	
 	@FXML
 	public void over1(DragEvent e1){
 
@@ -661,7 +636,7 @@ public class Gui_controller implements Initializable {
 		
 		else if (source.toString().startsWith("Button")){
 			
-			if (((Button)source).getId().equals("dot")){
+			if (((Button)source).getText().equals(".")){
 				rootPane.getChildren().remove(case_hl);
 				rootPane.getChildren().add(case_hl);
 				case_hl.setWidth(25);
@@ -685,7 +660,6 @@ public class Gui_controller implements Initializable {
 
 	}
 	
-
 	@FXML
 	public void detect_op(Event e2){
         Dragboard db = un.startDragAndDrop(TransferMode.MOVE);
@@ -742,22 +716,20 @@ public class Gui_controller implements Initializable {
 
 	}
 	
-	
-
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		
 		liste_panes = new ArrayList<>();
 		
 		bloc = new Bloc();
-	
-		//System.out.println("init");
+
 		zero_.setVisible(false);
 		zero_.relocate(-30.0, -30.0);
 		case_hl.relocate(-30.0, -30.0);
 		case_hl.setStyle("-fx-font-size: 18pt");
 		case_hl.setWidth(tailleQuadrillage);
 		case_hl.setHeight(tailleQuadrillage);
+		case_hl.setVisible(false);
 		
 		//liste_boutons = new ArrayList<>();
 		lignes_h = new ArrayList<>();
@@ -803,9 +775,4 @@ public class Gui_controller implements Initializable {
 	public static void setTailleQuadrillage(int tailleQuadrillage) {
 		Gui_controller.tailleQuadrillage = tailleQuadrillage;
 	}
-	
-
-	
-	
-
 }

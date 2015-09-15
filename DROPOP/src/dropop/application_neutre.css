@@ -1,2 +1,14 @@
 .button {
 }
+
+#grille {
+   -fx-background-color: #ffffff;
+}
+
+#toolbox {
+   -fx-background-color: #888888;
+}
+
+#rooPane {
+   -fx-background-color: #999999;
+}
