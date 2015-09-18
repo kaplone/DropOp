@@ -67,6 +67,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 public class Gui_controller implements Initializable {
 	
@@ -94,6 +96,9 @@ public class Gui_controller implements Initializable {
 	private Line div_v;
 	@FXML
 	private Line line_h;
+	@FXML
+	private Line line_v;
+	
 	
     @FXML
     private Button exportButton;
@@ -110,7 +115,9 @@ public class Gui_controller implements Initializable {
 	@FXML
 	private Pane potence;
 	@FXML
-	private Pane Horizontale;
+	private Pane horizontale;
+	@FXML
+	private Pane verticale;
 	
 	@FXML
 	private VBox toolbox;
@@ -363,7 +370,7 @@ public class Gui_controller implements Initializable {
 				
 		else if(selectionMode.get().equals("Case") && source.toString().startsWith("Button")){
 			
-			case_hl.setVisible(false);
+			case_hl.setVisible(true);
 
 				
 			ligne_source = rows.get(Utils.arrondirVersPosition(((Button) source).getLayoutY()));
@@ -378,7 +385,8 @@ public class Gui_controller implements Initializable {
 					ligne_source.delContenu(mapBoutons.get(source));
 					mapBoutons.remove(source);
 				}
-				case_hl.setVisible(false);
+				case_hl.setVisible(true);
+				
 				affPositionHorizontale.setVisible(false);
 				affPositionVerticale.setVisible(false);
 				zero_.setVisible(false);
@@ -519,10 +527,29 @@ public class Gui_controller implements Initializable {
 		}
      }
 	
+     protected File chooseExport(){
+		
+		Stage newStage = new Stage();
+		
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle("Enregistrer sous");
+		fileChooser.getExtensionFilters().addAll(
+		         new FileChooser.ExtensionFilter("images png", "*.png"));
+		File selectedFile = fileChooser.showSaveDialog(newStage);
+		if (selectedFile != null) {
+			 return selectedFile;
+		}
+		else {
+			 return (File) null;
+		}
+		
+	}
+	
 	@FXML
 	public void export(){
 		
 		
+        File file = chooseExport();
 		
 		rootPane.getStylesheets().clear();  
 		rootPane.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
@@ -598,9 +625,6 @@ public class Gui_controller implements Initializable {
 		rootPane.getStylesheets().clear();  
 		rootPane.getStylesheets().add(getClass().getResource("application_neutre.css").toExternalForm());
 
-        // TODO: probably use a file chooser here
-        File file = new File("/home/kaplone/Desktop/chart.png");
-
         try {
             ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
         } catch (IOException e) {
@@ -639,11 +663,13 @@ public class Gui_controller implements Initializable {
 			if (((Button)source).getText().equals(".")){
 				rootPane.getChildren().remove(case_hl);
 				rootPane.getChildren().add(case_hl);
+				case_hl.setVisible(true);
 				case_hl.setWidth(25);
 				case_hl.setHeight(25);
 				Visibilite.highlightPosDot(e1, case_hl, zero_);
 	        }
 			else {
+				case_hl.setVisible(true);
 				case_hl.toBack();
 				case_hl.setWidth(50);
 				case_hl.setHeight(50);
@@ -683,14 +709,14 @@ public class Gui_controller implements Initializable {
         	lh.setStrokeWidth(4);
             Line lv = new Line();
             lv.setStrokeWidth(4);
-            lh.setStartX(div_h.getStartX());
+            lh.setStartX(div_h.getStartX() - 20);
             lh.setStartY(div_h.getStartY());
-            lh.setEndX(div_h.getEndX() + 10);
+            lh.setEndX(div_h.getEndX() - 10);
             lh.setEndY(div_h.getEndY());
-            lv.setStartX(div_v.getStartX());
+            lv.setStartX(div_v.getStartX() - 20);
             lv.setStartY(div_v.getStartY() - 70);
-            lv.setEndX(div_v.getEndX());
-            lv.setEndY(div_v.getEndY());
+            lv.setEndX(div_v.getEndX() - 20);
+            lv.setEndY(div_v.getEndY() + 20);
             
             
             
@@ -707,11 +733,18 @@ public class Gui_controller implements Initializable {
             
             cursorPane.getChildren().add(lh);
         }
-
-       
-
         
-        
+        else if (((Pane) source).getId().equals("verticale")){
+        	Line lv = new Line();
+        	lv.setStrokeWidth(4);
+        	lv.setStartX(line_v.getStartX() - 30);
+            lv.setStartY(line_v.getStartY() -20);
+            lv.setEndX(line_v.getEndX() - 30);
+            lv.setEndY(line_v.getEndY() + 20);
+            
+            cursorPane.getChildren().add(lv);
+        }
+ 
         rootPane.getChildren().add(cursorPane);
 
 	}

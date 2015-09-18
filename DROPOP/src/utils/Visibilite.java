@@ -43,6 +43,7 @@ public class Visibilite {
 		case_hl.relocate(Utils.arrondir(e1.getSceneX()) + l,
 				         Utils.arrondir(e1.getSceneY()) + l);
 	    case_hl.setVisible(true);
+	    case_hl.toFront();
 	    
 	    affPositionVerticale.textProperty().set((Utils.arrondirVersPosition(e1.getSceneY())) + "");
 	    affPositionVerticale.relocate(Utils.arrondir(e1.getSceneX())  + 60,

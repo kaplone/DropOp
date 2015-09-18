@@ -82,16 +82,38 @@
                         <Insets bottom="20.0" top="20.0" />
                      </VBox.margin>
                   </VBox>
-                  <Pane fx:id="horizontale" onDragDetected="#detect_op" prefHeight="39.0" prefWidth="140.0">
+                  <Pane fx:id="horizontale" onDragDetected="#detect_op" prefHeight="39.0" prefWidth="140.0" style="-fx-background-color: #f1f1f1;">
                      <children>
-                        <Line fx:id="line_h" endX="100.0" endY="20.0" startX="20.0" startY="20.0" />
+                        <Line fx:id="line_h" endX="100.0" endY="20.0" layoutX="10.0" startX="20.0" startY="20.0" />
                      </children>
-                  </Pane><Pane fx:id="potence" onDragDetected="#detect_op" prefHeight="125.0" prefWidth="100.0">
-<VBox.margin>
-<Insets top="20.0" />
-</VBox.margin>
-<children><Line fx:id="div_h" endX="80.0" layoutY="50.0" startX="50.0" /><Line fx:id="div_v" endX="50.0" endY="100.0" startX="50.0" startY="30.0" />
-</children></Pane>
+                     <VBox.margin>
+                        <Insets bottom="10.0" />
+                     </VBox.margin>
+                  </Pane>
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <Pane fx:id="verticale" onDragDetected="#detect_op" prefHeight="100.0" prefWidth="68.0" style="-fx-background-color: #f1f1f1;">
+                           <children>
+                              <Line fx:id="line_v" endX="30.0" endY="80.0" startX="30.0" startY="20.0" />
+                           </children>
+                           <HBox.margin>
+                              <Insets right="10.0" />
+                           </HBox.margin>
+                        </Pane>
+                        <Pane fx:id="potence" onDragDetected="#detect_op" prefHeight="100.0" prefWidth="69.0" style="-fx-background-color: #f1f1f1;">
+      <children>
+                              <Line fx:id="div_h" endX="50.0" layoutY="40.0" startX="20.0" />
+                              <Line fx:id="div_v" endX="20.0" endY="80.0" startX="20.0" startY="20.0" />
+      </children>
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
+                        </Pane>
+                     </children>
+                     <VBox.margin>
+                        <Insets bottom="20.0" />
+                     </VBox.margin>
+                  </HBox>
                   <Button fx:id="exportButton" mnemonicParsing="false" onAction="#export" text="exporter" />
 </children>
                <BorderPane.margin>
